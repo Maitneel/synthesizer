@@ -14,19 +14,6 @@
       keyborad.appendChild(whitekey_div[i]);
     }
   })();
-/*
-  (function() {
-    for (let i = 0; i < 14; i++) {
-      blackkey_div[i] = document.createElement('div');
-      if (i % 7 == 2 || i % 7 == 6) {
-        blackkey_div[i].className = 'blackkey_none';
-      } else {
-        blackkey_div[i].className = 'blackkey';
-      }
-      keyborad.appendChild(blackkey_div[i]);
-    }
-  })()
-*/
 
   (function() { 
     let ith_marginleft;
