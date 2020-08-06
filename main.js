@@ -57,6 +57,18 @@
     }
   })();
 
+  let A4_frequency = 440;
+  let frequency_list = [];
+  (function() {
+    frequency_list[9] = A4_frequency;
+    for (let i = 9; i < key_list.length; i++) {
+      frequency_list[i] = A4_frequency * Math.pow(2, (i - 9) / 12);
+    }
+    for (let i = 0; i < 9; i++) {
+      frequency_list[i] = frequency_list[i + 12] / 2;
+    }
+  })();
+
   function audio_play(n) {
     console.log('onmousedown, pushed by ' + n);
     // TODO
