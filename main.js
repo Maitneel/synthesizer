@@ -32,7 +32,40 @@
     }
   })();
 
+  let key_list = [];
+  (function() {
+    let whitekey_index = 0;
+    let blackkey_index = 0;
+    for (let i = 0; i < whitekey_div.length; i++) {
+      key_list[whitekey_index + blackkey_index] = whitekey_div[whitekey_index];
+      whitekey_index++;
+      if (!(i % 7 == 2 || i % 7 == 6) && blackkey_index < blackkey_div.length) {
+        key_list[whitekey_index + blackkey_index] = blackkey_div[blackkey_index];
+        blackkey_index++;
+      }
+    }
+    for (let i = 0; i < key_list.length; i++) {
+      key_list[i].onmousedown = () => {
+        audio_play(i);
+      }
+      key_list[i].onmouseup = () => {
+        audio_stop(i);
+      }
+      key_list[i].onmouseout = () => {
+        audio_stop(i);
+      }
+    }
+  })();
 
+  function audio_play(n) {
+    console.log('onmousedown, pushed by ' + n);
+    // TODO
+  }
+
+  function audio_stop(n) {
+    console.log('mouseout or onmouseup. by ' + n);
+    // TODO
+  }
 
 
 })();
