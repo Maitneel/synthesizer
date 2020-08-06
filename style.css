@@ -1,0 +1,42 @@
+#synthesizer {
+  width: 1400px;
+  height: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: red;
+  padding: 0.5%;
+}
+
+#control {
+  width: 100%;
+  height: 60%;
+  background-color: yellow;
+}
+
+#keyboard {
+  width: 1396px;
+  height: 40%;
+  background: blue;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.whitekey{
+  width: 92px;
+  height: 318px;
+  margin-top: 1px;
+  background-color: white;
+  float: left;
+  position: absolute;
+  z-index: 1;
+}
+
+.blackkey {
+  width: 46px;
+  height: 191px;
+  margin-top: 1px;
+  background-color: black;
+  float: left;
+  position: absolute;
+  z-index: 2;
+}
