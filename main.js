@@ -96,7 +96,7 @@
       console.error('bit_rate dose not 16.');
       return;
     }
-    let data_AB = new ArrayBuffer(wav_header.header_size + byte_per_s * length);
+    let data_AB = new ArrayBuffer(wav_header.header_size + wav_header.byte_per_s * length);
     let data_ui8a = new Uint8Array(data_AB);
     let wave = new Int16Array(wav_header.sampling_fre * length);
     for (let i = 0; i < wave.length; i++) {
@@ -110,24 +110,24 @@
     header_string += wav_header.RIFF;
     header_string += int_to_string(wav_header.file_size, 4);
     header_string += wav_header.FMT;
-    head_string += int_to_string(wav_header.fmt_size, 4);
-    head_string += int_to_string(wav_header.format, 2);
-    head_string += int_to_string(wav_header.channel, 2);
-    head_string += int_to_string(wav_header.sampling_fre, 4);
-    head_string += int_to_string(wav_header.byte_per_s, 4);
-    head_string += int_to_string(wav_header.block_size, 2);
-    head_string += int_to_string(wav_header.bit_rate, 2);
-    head_string += wav_header.DATA;
-    head_string += int_to_string(wav_header.data_size, 4);
+    header_string += int_to_string(wav_header.fmt_size, 4);
+    header_string += int_to_string(wav_header.format, 2);
+    header_string += int_to_string(wav_header.channel, 2);
+    header_string += int_to_string(wav_header.sampling_fre, 4);
+    header_string += int_to_string(wav_header.byte_per_s, 4);
+    header_string += int_to_string(wav_header.block_size, 2);
+    header_string += int_to_string(wav_header.bit_rate, 2);
+    header_string += wav_header.DATA;
+    header_string += int_to_string(wav_header.data_size, 4);
     
     let data_string = "";
-    for (i = 0; i < wave.length; i++) {  
+    for (let i = 0; i < wave.length; i++) {  
       data_string += int_to_string(wave[i], 2);
     }
 
     let i;
-    for (i = 0; i < head_string.length; i++) {
-      data_ui8a[i] = head_string.charCodeAt(i);
+    for (i = 0; i < header_string.length; i++) {
+      data_ui8a[i] = header_string.charCodeAt(i);
     }
 
     for (i = 0; i < data_string; i++) {
