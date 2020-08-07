@@ -1,6 +1,7 @@
 (function() {
   'use strict';
 
+  const audio_tags_area = document.getElementById('audio_tags');
   const keyborad = document.getElementById('keyboard');
 
   
@@ -149,7 +150,7 @@
       frequency_list[i] = frequency_list[i + 12] / 2;
     }
   })();
-  
+
   let wav_files = [];
   let wav_length = 60;
   (function() {
@@ -158,13 +159,30 @@
     }
   })();
 
+  // create audio tags
+  let audio = [];
+  let wav_files_blob = [];
+  (function() {
+    for (let i = 0; i < key_list.length; i++) {
+      wav_files_blob[i] = new Blob([wav_files[i]], {type: 'audio/wav'});
+      audio[i] = document.createElement('audio');
+      audio[i].src = URL.createObjectURL(wav_files_blob[i]);
+      audio_tags_area.appendChild(audio[i]);
+      console.log(i);
+    }
+  })();
+  
+  console.log(wav_files[0]);
+
   function audio_play(n) {
     console.log('onmousedown, pushed by ' + n);
+    audio[n].play();
     // TODO
   }
 
   function audio_stop(n) {
     console.log('mouseout or onmouseup. by ' + n);
+    audio[n].pause();
     // TODO
   }
 
