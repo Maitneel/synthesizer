@@ -137,7 +137,7 @@
     return data_AB;
   }
 
-
+  
   let A4_frequency = 440;
   let frequency_list = [];
   (function() {
@@ -147,6 +147,14 @@
     }
     for (let i = 0; i < 9; i++) {
       frequency_list[i] = frequency_list[i + 12] / 2;
+    }
+  })();
+  
+  let wav_files = [];
+  let wav_length = 60;
+  (function() {
+    for (let i = 0; i < frequency_list.length; i++) {
+      wav_files[i] = create_sin_wave(wav_header, frequency_list[i], wav_length);
     }
   })();
 
