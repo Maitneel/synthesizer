@@ -8,6 +8,7 @@
 
   let whitekey_div = [];
   let blackkey_div = [];
+  // create white key
   (function () {
     for (let i = 0; i < 15; i++) {
       whitekey_div[i] = document.createElement('div');
@@ -17,6 +18,7 @@
     }
   })();
 
+  // creat black key
   (function () {
     let ith_marginleft;
     for (let i = 0; i < 10; i++) {
@@ -59,6 +61,7 @@
     }
   })();
 
+  // wav file format
   var wav_header = {
     RIFF: "RIFF",
     file_size: 0,
@@ -267,6 +270,7 @@
 
   let A4_frequency = input_A4_frequency.value;
   let frequency_list = [];
+  // calc frequency and create frequency list
   function create_frequency_list() {
     frequency_list[9] = A4_frequency;
     for (let i = 9; i < key_list.length; i++) {
@@ -279,6 +283,7 @@
 
   let wav_files = [];
   let wav_length = 1;
+  // frequency_list の周波数を元にサイン波を作成し，それを配列に保存する
   function set_sin_wave() {
     for (let i = 0; i < frequency_list.length; i++) {
       wav_files[i] = create_sin_wave(wav_header, frequency_list[i], wav_length);
@@ -305,6 +310,7 @@
     }
   }
 
+  // A4 の周波数が変更された時に audio タグを変更する為に呼び出される関数
   function update_audio() {
     create_frequency_list();
     set_sin_wave();
@@ -319,6 +325,7 @@
     console.log(audio[0].src);
   }
 
+  // 初期化
   (function () {
     create_frequency_list();
     set_sin_wave();
