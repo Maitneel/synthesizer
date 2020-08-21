@@ -1,6 +1,7 @@
 (function () {
   'use strict';
 
+  const input_A4_frequency = document.getElementById('A4_frequency')
   const audio_tags_area = document.getElementById('audio_tags');
   const keyborad = document.getElementById('keyboard');
 
@@ -264,9 +265,9 @@
     return data_AB;
   }
 
-  let A4_frequency = 440;
+  let A4_frequency = input_A4_frequency.value;
   let frequency_list = [];
-  (function () {
+  function create_frequency_list() {
     frequency_list[9] = A4_frequency;
     for (let i = 9; i < key_list.length; i++) {
       frequency_list[i] = A4_frequency * Math.pow(2, (i - 9) / 12);
@@ -274,20 +275,20 @@
     for (let i = 0; i < 9; i++) {
       frequency_list[i] = frequency_list[i + 12] / 2;
     }
-  })();
+  };
 
   let wav_files = [];
   let wav_length = 1;
-  (function () {
+  function set_sin_wave() {
     for (let i = 0; i < frequency_list.length; i++) {
       wav_files[i] = create_sin_wave(wav_header, frequency_list[i], wav_length);
     }
-  })();
+  };
 
   // create audio tags
   let audio = [];
   let wav_files_blob = [];
-  (function () {
+  function create_audio () {
     for (let i = 0; i < key_list.length; i++) {
       wav_files_blob[i] = new Blob([wav_files[i]], {type: 'audio/wav'});
       audio[i] = document.createElement('audio');
@@ -296,6 +297,32 @@
       audio_tags_area.appendChild(audio[i]);
       console.log(i);
     }
+  };
+
+  function remove_all_children(id) {
+    while (id.firstChild) {
+      id.removeChild(id.firstChild);
+    }
+  }
+
+  function update_audio() {
+    create_frequency_list();
+    set_sin_wave();
+    remove_all_children(audio_tags_area);
+    create_audio();
+  }
+
+  input_A4_frequency.onchange = () => {
+    A4_frequency = input_A4_frequency.value;
+    console.log(audio[0].src);
+    update_audio();
+    console.log(audio[0].src);
+  }
+
+  (function () {
+    create_frequency_list();
+    set_sin_wave();
+    create_audio();
   })();
 
   console.log(wav_files[0]);
