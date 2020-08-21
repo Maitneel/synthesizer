@@ -25,18 +25,32 @@
   width: 92px;
   height: 318px;
   margin-top: 1px;
-  background-color: white;
   float: left;
   position: absolute;
   z-index: 1;
+}
+
+.not_pressed_whitekey {
+  background-color: #ffffff;
+}
+
+.pressed_whitekey {
+  background-color: #cccccc;
 }
 
 .blackkey {
   width: 46px;
   height: 191px;
   margin-top: 1px;
-  background-color: black;
   float: left;
   position: absolute;
   z-index: 2;
+}
+
+.not_pressed_blackkey {
+  background-color: #000000;
+}
+
+.pressed_blackkey {
+  background-color: #333333;
 }

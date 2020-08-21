@@ -12,7 +12,7 @@
   (function () {
     for (let i = 0; i < 15; i++) {
       whitekey_div[i] = document.createElement('div');
-      whitekey_div[i].className = 'whitekey';
+      whitekey_div[i].classList.add('whitekey', 'not_pressed_whitekey');
       whitekey_div[i].style.marginLeft = 1 + (93 * i) + 'px';
       keyborad.appendChild(whitekey_div[i]);
     }
@@ -23,7 +23,7 @@
     let ith_marginleft;
     for (let i = 0; i < 10; i++) {
       blackkey_div[i] = document.createElement('div');
-      blackkey_div[i].className = 'blackkey';
+      blackkey_div[i].classList.add('blackkey', 'not_pressed_blackkey');
       if (i == 0) {
         ith_marginleft = 70;
       } else if (i % 5 == 2 || i % 5 == 0) {
@@ -337,6 +337,15 @@
   function audio_play(n) {
     console.log('onmousedown, pushed by ' + n);
     audio[n].play();
+    if (((n % 12) < 5 && (n % 12) % 2 == 0) || ((5 <= (n % 12)) && (n % 12) % 2 == 1)) {
+      key_list[n].classList.remove('not_pressed_whitekey');
+      key_list[n].classList.add('pressed_whitekey');
+    } else {
+      key_list[n].classList.remove('not_pressed_blackkey');
+      key_list[n].classList.add('pressed_blackkey');
+    }
+
+    key_list[n].classList.add('on_press_whitekey');
     console.log(audio[n].src);
     // TODO
   }
@@ -345,6 +354,15 @@
     console.log('mouseout or onmouseup. by ' + n);
     audio[n].pause();
     audio[n].currentTime = 0;
+    console.log(n + ' ' + (n % 12) + ' ' + (((n % 12) < 5 && (n % 12) % 2 == 0) || ((5 <= (n % 12)) && (n % 12) % 2 == 1)))
+    if (((n % 12) < 5 && (n % 12) % 2 == 0) || ((5 <= (n % 12)) && (n % 12) % 2 == 1)) {
+      key_list[n].classList.remove('pressed_whitekey');
+      key_list[n].classList.add('not_pressed_whitekey');
+    } else {
+      key_list[n].classList.remove('pressed_blackkey');
+      key_list[n].classList.add('not_pressed_blackkey');
+    }
+    // key_list[n].className -= 'on_press_whitekey';
     // TODO
   }
 
