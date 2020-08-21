@@ -302,7 +302,7 @@
   function audio_stop(n) {
     console.log('mouseout or onmouseup. by ' + n);
     audio[n].pause();
-    audio[i].currentTime = 0;
+    audio[n].currentTime = 0;
     // TODO
   }
 
