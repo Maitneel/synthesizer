@@ -247,6 +247,31 @@
     return create_file(header_bin, wave);
   }
 
+  function create_square_wave(wav_header, frequency, length) {
+    // bit_rateが16以外の場合は考えないものとする
+    // create_sin_wave でもしたけど wav_header の file_size と data_size 以外変更するかは未定
+    if (wav_header.bit_rate != 16) {
+      console.error('bit_rate dose not 16.');
+      return;
+    }
+    
+    if (1 < tweak_length(frequency, wav_header.sampling_fre)) {
+      // TODO? とりあえず 1 より大きい場合バグると思うので弾く
+      console.error('\'tweak_length(frequency, wav_header.sampling_fre)\' is greater than \'1\'.');
+    }
+
+    set_sizes(wav_header, frequency, length);
+    let header_bin = create_header_ui8a_bin(wav_header);
+
+    let wave = new Int16Array(wav_header.sampling_fre * length);
+    let boost = 30000;
+    for (let i = 0; i < wave.length; i++) {
+      wave[i] = (Math.floor((2 * i) / (wav_header.sampling_fre / frequency)) % 2) * boost - boost / 2;
+    }
+
+    return create_file(header_bin, wave);
+  }
+
   let A4_frequency = input_A4_frequency.value;
   let frequency_list = [];
   // calc frequency and create frequency list
