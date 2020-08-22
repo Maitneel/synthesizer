@@ -109,32 +109,24 @@
     return (sampling_fre / frequency * Math.max(Math.floor(frequency) , 2) / sampling_fre);
   }
 
-  function create_sin_wave(wav_header, frequency, length) {
-    // bit_rateが16以外の場合は考えないものとする
-    if (wav_header.bit_rate != 16) {
-      console.error('bit_rate dose not 16.');
-      return;
-    }
-    
-    if (1 < tweak_length(frequency, wav_header.sampling_fre)) {
-      // TODO? とりあえず 1 より大きい場合バグると思うので弾く
-      console.error('\'tweak_length(frequency, wav_header.sampling_fre)\' is greater than \'1\'.');
-    }
+  function set_sizes(wav_header, frequency, length) {
     wav_header.data_size = wav_header.block_size * length * Math.round(wav_header.sampling_fre * tweak_length(frequency, wav_header.sampling_fre));
     wav_header.file_size = 4 + 4 + 4 + wav_header.fmt_size + 4 + 4 + wav_header.data_size;
+  }
 
-    let data_AB = new ArrayBuffer(wav_header.file_size + 4 + 4);
-    let data_ui8a = new Uint8Array(data_AB);
-    let wave = new Int16Array(wav_header.sampling_fre * length);
-    console.log("flag");
-    for (let i = 0; i < wave.length; i++) {
-      wave[i] = Math.floor(Math.sin(i * 2 * Math.PI * frequency / wav_header.sampling_fre) * 30000);
-    }
-
-
+  function create_header_ui8a_bin(wav_header) {
+    let index = 0;
     let header_bin = new Uint8Array(wav_header.data_size);
-    {
+    let i;
+    for (let i = 0; i < wav_header.RIFF.length; i++) {
+      header_bin[i + index] += wav_header.RIFF.charCodeAt(i);
+    }
+    index += wav_header.RIFF.length;
+
+    let file_size_bin = create_per0x100_array(wav_header.file_size, 4)
+    for (let i = 0; i < file_size_bin.length; i++) {
       let index = 0;
+      let header_bin = new Uint8Array(wav_header.data_size);
       let i;
       for (let i = 0; i < wav_header.RIFF.length; i++) {
         header_bin[i + index] += wav_header.RIFF.charCodeAt(i);
@@ -209,7 +201,33 @@
       for (let i = 0; i < data_size_bin.length; i++) {
         header_bin[i + index] += data_size_bin[i];
       }
+      return header_bin;
     }
+  }
+
+
+  function create_sin_wave(wav_header, frequency, length) {
+    // bit_rateが16以外の場合は考えないものとする
+    if (wav_header.bit_rate != 16) {
+      console.error('bit_rate dose not 16.');
+      return;
+    }
+    
+    if (1 < tweak_length(frequency, wav_header.sampling_fre)) {
+      // TODO? とりあえず 1 より大きい場合バグると思うので弾く
+      console.error('\'tweak_length(frequency, wav_header.sampling_fre)\' is greater than \'1\'.');
+    }
+
+    set_sizes(wav_header, frequency, length);
+
+    let data_AB = new ArrayBuffer(wav_header.file_size + 4 + 4);
+    let data_ui8a = new Uint8Array(data_AB);
+    let wave = new Int16Array(wav_header.sampling_fre * length);
+    for (let i = 0; i < wave.length; i++) {
+      wave[i] = Math.floor(Math.sin(i * 2 * Math.PI * frequency / wav_header.sampling_fre) * 30000);
+    }
+
+    let header_bin = create_header_ui8a_bin(wav_header);
 
     /*
      let header_string = "";
