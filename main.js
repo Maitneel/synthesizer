@@ -229,27 +229,6 @@
 
     let header_bin = create_header_ui8a_bin(wav_header);
 
-    /*
-     let header_string = "";
-     header_string += wav_header.RIFF;
-     header_string += int_to_string(wav_header.file_size, 4);
-     header_string += wav_header.FMT;
-     header_string += int_to_string(wav_header.fmt_size, 4);
-     header_string += int_to_string(wav_header.format, 2);
-     header_string += int_to_string(wav_header.channel, 2);
-     header_string += int_to_string(wav_header.sampling_fre, 4);
-     header_string += int_to_string(wav_header.byte_per_s, 4);
-     header_string += int_to_string(wav_header.block_size, 2);
-     header_string += int_to_string(wav_header.bit_rate, 2);
-     header_string += wav_header.DATA;
-     header_string += int_to_string(wav_header.data_size, 4);
-     
-     let data_string = "";
-     for (let i = 0; i < wave.length; i++) {  
-       data_string += int_to_string(wave[i], 2);
-     }
- */
-
     let i;
     for (let i = 0; i < wav_header.header_size; i++) {
       data_ui8a[i] = header_bin[i];
@@ -262,27 +241,7 @@
         data_ui8a[wav_header.header_size + i * 2 + j] = sample[j];
       }
     }
-    /*
-    let temp = "";
-    // temp = int_to_string(wave[0], 2);
-    // console.log('int_tostring  ' + temp.charCodeAt(0) + ' ' +  temp.charCodeAt(1));
-    for (let i = 0; i < 100; i++) {
-      temp += data_string.charCodeAt(i).toString();
-      temp += ' ';
-      // if (i == 0) console.log(data_string.charCodeAt(i).toString());
-    }
-    // console.log('temp '+ temp)
 
-    for (let i = 1; i < wave.length; i++) {
-      // data_ui8a[i + header_string.length] = data_string.charCodeAt(i);
-      // console.log('i = '+i);
-      for (let j = 0; j < 2; j++) {
-        // console.log(wave[i]);
-        data_ui8a[i * 2 + header_string.length + j] = wave[i] % 256;
-        wave[i] = wave[i] >>> 2;
-      }
-    }
-    */
     return data_AB;
   }
 
