@@ -205,6 +205,24 @@
     }
   }
 
+  function create_file(header_bin, wave) {
+    let data_AB = new ArrayBuffer(wav_header.file_size + 4 + 4);
+    let data_ui8a = new Uint8Array(data_AB);
+
+    for (let i = 0; i < wav_header.header_size; i++) {
+      data_ui8a[i] = header_bin[i];
+    }
+
+    let sample;
+    for (let i = 0; i < wav_header.data_size; i++) {
+      sample = create_per0x100_array(wave[i], 2);
+      for (let j = 0; j < 2; j++) {
+        data_ui8a[wav_header.header_size + i * 2 + j] = sample[j];
+      }
+    }
+    return data_AB;
+  }
+
 
   function create_sin_wave(wav_header, frequency, length) {
     // bit_rateが16以外の場合は考えないものとする
@@ -219,30 +237,14 @@
     }
 
     set_sizes(wav_header, frequency, length);
+    let header_bin = create_header_ui8a_bin(wav_header);
 
-    let data_AB = new ArrayBuffer(wav_header.file_size + 4 + 4);
-    let data_ui8a = new Uint8Array(data_AB);
     let wave = new Int16Array(wav_header.sampling_fre * length);
     for (let i = 0; i < wave.length; i++) {
       wave[i] = Math.floor(Math.sin(i * 2 * Math.PI * frequency / wav_header.sampling_fre) * 30000);
     }
 
-    let header_bin = create_header_ui8a_bin(wav_header);
-
-    let i;
-    for (let i = 0; i < wav_header.header_size; i++) {
-      data_ui8a[i] = header_bin[i];
-    }
-
-    let sample;
-    for (let i = 0; i < wav_header.data_size; i++) {
-      sample = create_per0x100_array(wave[i], 2);
-      for (let j = 0; j < 2; j++) {
-        data_ui8a[wav_header.header_size + i * 2 + j] = sample[j];
-      }
-    }
-
-    return data_AB;
+    return create_file(header_bin, wave);
   }
 
   let A4_frequency = input_A4_frequency.value;
