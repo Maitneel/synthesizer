@@ -4,6 +4,7 @@
   const input_A4_frequency = document.getElementById('A4_frequency')
   const input_sin_wave = document.getElementById('sin_wave');
   const input_square_wave = document.getElementById('square_wave');
+  const input_sawtooth_wave = document.getElementById('sawtooth_wave');
   const audio_tags_area = document.getElementById('audio_tags');
   const keyborad = document.getElementById('keyboard');
 
@@ -274,6 +275,32 @@
     return create_file(header_bin, wave);
   }
 
+  function create_sawtooth_wave(wav_header, frequency, length) {
+    // bit_rateが16以外の場合は考えないものとする
+    // create_sin_wave でもしたけど wav_header の file_size と data_size 以外変更するかは未定
+    if (wav_header.bit_rate != 16) {
+      console.error('bit_rate dose not 16.');
+      return;
+    }
+    
+    if (1 < tweak_length(frequency, wav_header.sampling_fre)) {
+      // TODO? とりあえず 1 より大きい場合バグると思うので弾く
+      console.error('\'tweak_length(frequency, wav_header.sampling_fre)\' is greater than \'1\'.');
+    }
+
+    set_sizes(wav_header, frequency, length);
+    let header_bin = create_header_ui8a_bin(wav_header);
+
+    let wave = new Int16Array(wav_header.sampling_fre * length);
+    let boost = 30000;
+    for (let i = 0; i < wave.length; i++) {
+      wave[i] = (((2 * i) / (wav_header.sampling_fre / frequency)) % 2) * boost - boost / 2;
+    }
+
+    return create_file(header_bin, wave);
+  }
+
+
   let A4_frequency = input_A4_frequency.value;
   let frequency_list = [];
   // calc frequency and create frequency list
@@ -299,6 +326,12 @@
   function set_square_wave() {
     for (let i = 0; i < frequency_list.length; i++) {
       wav_files[i] = create_square_wave(wav_header, frequency_list[i], wav_length);
+    }
+  }
+
+  function set_sawtooth_wave() {
+    for (let i = 0; i < frequency_list.length; i++) {
+      wav_files[i] = create_sawtooth_wave(wav_header, frequency_list[i], wav_length);
     }
   }
 
@@ -329,6 +362,8 @@
       set_sin_wave();
     } else if (selected_wave_type === 'square') {
       set_square_wave();
+    } else if (selected_wave_type === 'sawtooth') {
+      set_sawtooth_wave();
     } else {
       set_sin_wave();
     }
@@ -393,6 +428,11 @@
 
   input_square_wave.onclick = () => {
     selected_wave_type = 'square';
+    update_audio(selected_wave_type);
+  }
+
+  input_sawtooth_wave.onclick = () => {
+    selected_wave_type = 'sawtooth';
     update_audio(selected_wave_type);
   }
 
