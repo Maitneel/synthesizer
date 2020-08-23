@@ -423,6 +423,7 @@
 
   input_sin_wave.onclick = () => {
     selected_wave_type = 'sin';
+    update_audio(selected_wave_type);
     console.log('change sin');
   }
 
