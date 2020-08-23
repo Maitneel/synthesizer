@@ -2,6 +2,8 @@
   'use strict';
 
   const input_A4_frequency = document.getElementById('A4_frequency')
+  const input_sin_wave = document.getElementById('sin_wave');
+  const input_square_wave = document.getElementById('square_wave');
   const audio_tags_area = document.getElementById('audio_tags');
   const keyborad = document.getElementById('keyboard');
 
@@ -294,6 +296,12 @@
     }
   };
 
+  function set_square_wave() {
+    for (let i = 0; i < frequency_list.length; i++) {
+      wav_files[i] = create_square_wave(wav_header, frequency_list[i], wav_length);
+    }
+  }
+
   // create audio tags
   let audio = [];
   let wav_files_blob = [];
@@ -315,17 +323,25 @@
   }
 
   // A4 の周波数が変更された時に audio タグを変更する為に呼び出される関数
-  function update_audio() {
+  function update_audio(selected_wave_type) {
     create_frequency_list();
-    set_sin_wave();
+    if (selected_wave_type === 'sin') {
+      set_sin_wave();
+    } else if (selected_wave_type === 'square') {
+      set_square_wave();
+    } else {
+      set_sin_wave();
+    }
     remove_all_children(audio_tags_area);
     create_audio();
   }
 
+  let selected_wave_type;
+
   input_A4_frequency.onchange = () => {
     A4_frequency = input_A4_frequency.value;
     console.log(audio[0].src);
-    update_audio();
+    update_audio(selected_wave_type);
     console.log(audio[0].src);
   }
 
@@ -370,5 +386,14 @@
     // TODO
   }
 
+  input_sin_wave.onclick = () => {
+    selected_wave_type = 'sin';
+    console.log('change sin');
+  }
+
+  input_square_wave.onclick = () => {
+    selected_wave_type = 'square';
+    update_audio(selected_wave_type);
+  }
 
 })();

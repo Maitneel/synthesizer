@@ -9,6 +9,13 @@
   <div id="synthesizer">
     <div id="control">
       <input type="number" id="A4_frequency" value="440">
+      <div id="select_wave_div">
+        <input type="radio" name="wave_type" id="sin_wave" value="sin" checked>
+          <label for="sin_wave">sine wave</label>
+        <br>
+        <input type="radio" name="wave_type" id="square_wave" value="square">
+          <label for="square_wave">square wave</label>
+      </div>
       <div id="audio_tags"></div>
     </div>
     <div id="keyboard">
