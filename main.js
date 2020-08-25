@@ -275,6 +275,28 @@
     return create_file(header_bin, wave);
   }
 
+  /*
+  // 矩形波，のこぎり波をフーリエ級数で計算したかったが(倍音が多すぎることになるので)，なぜかうまくいかないのでとりあえず1回放置する
+  let sawtooth = [];
+  function clac_sawtooth(sampling_fre, max_x) {
+    // ここでの sampling_fre は他の sampling_fre とは全くもって違うものである
+    //   →他のところにおけるものはwavファイルのサンプリング周波数であるのに対し，これはのこぎり波の波形の計算をする時にどの程度でサンプリングするかの周波数である
+    sawtooth[0] = [];
+    for (let i = 0; i < sampling_fre; i++) {
+      sawtooth[0][i] = -Math.sin(2 * Math.PI * i / sampling_fre) - Math.sin(2 * Math.PI * i * 2 / sampling_fre) / 2;
+      // console.log(-Math.sin(2 * Math.PI * i / sampling_fre) - Math.sin(2 * Math.PI * i * 2 / sampling_fre) / 2);
+    }
+    // console.log('hoge');
+    for (let i = 1; i < max_x; i++) {
+      sawtooth[i] = [];
+      for (let j = 0; j < sampling_fre; j++) {
+        sawtooth[i][j] = sawtooth[i - 1][j] + (sawtooth[i - 1][(j * 2) % sampling_fre]) / 2;
+        // console.log(sawtooth[i - 1][j] + ' ' + sawtooth[i - 1][((j * 2) % sampling_fre)] + ' ' + (j * 2) % sampling_fre);
+      }
+    }
+  }
+  */
+
   function create_sawtooth_wave(wav_header, frequency, length) {
     // bit_rateが16以外の場合は考えないものとする
     // create_sin_wave でもしたけど wav_header の file_size と data_size 以外変更するかは未定
