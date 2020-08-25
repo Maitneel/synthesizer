@@ -395,7 +395,7 @@
     create_audio();
   }
 
-  let selected_wave_type;
+  let selected_wave_type = [];
 
   input_v0_A4_frequency.onchange = () => {
     v0_A4_frequency = input_v0_A4_frequency.value;
@@ -446,19 +446,19 @@
   }
 
   input_v0_sin_wave.onclick = () => {
-    selected_wave_type = 'sin';
-    update_audio(selected_wave_type, 0);
+    selected_wave_type[0] = 'sin';
+    update_audio(selected_wave_type[0], 0);
     console.log('change sin');
   }
 
   input_v0_square_wave.onclick = () => {
-    selected_wave_type = 'square';
-    update_audio(selected_wave_type, 0);
+    selected_wave_type[0] = 'square';
+    update_audio(selected_wave_type[0], 0);
   }
 
   input_v0_sawtooth_wave.onclick = () => {
-    selected_wave_type = 'sawtooth';
-    update_audio(selected_wave_type, 0);
+    selected_wave_type[0] = 'sawtooth';
+    update_audio(selected_wave_type[0], 0);
   }
 
 })();
