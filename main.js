@@ -5,8 +5,23 @@
   const input_v0_sin_wave = document.getElementById('v0_sin_wave');
   const input_v0_square_wave = document.getElementById('v0_square_wave');
   const input_v0_sawtooth_wave = document.getElementById('v0_sawtooth_wave');
-  const audio_tags_area = document.getElementById('audio_tags');
+
+  const input_v1_A4_frequency = document.getElementById('v1_A4_frequency')
+  const input_v1_sin_wave = document.getElementById('v1_sin_wave');
+  const input_v1_square_wave = document.getElementById('v1_square_wave');
+  const input_v1_sawtooth_wave = document.getElementById('v1_sawtooth_wave');
+
+  const input_v2_A4_frequency = document.getElementById('v2_A4_frequency')
+  const input_v2_sin_wave = document.getElementById('v2_sin_wave');
+  const input_v2_square_wave = document.getElementById('v2_square_wave');
+  const input_v2_sawtooth_wave = document.getElementById('v2_sawtooth_wave');
+  
+  const v0_audio_tags_area = document.getElementById('v0_audio_tags');
+  const v1_audio_tags_area = document.getElementById('v1_audio_tags');
+  const v2_audio_tags_area = document.getElementById('v2_audio_tags');
   const keyborad = document.getElementById('keyboard');
+
+  const audio_tags_area = [v0_audio_tags_area, v1_audio_tags_area, v2_audio_tags_area];
 
 
   let whitekey_div = [];
@@ -260,6 +275,7 @@
     
     if (1 < tweak_length(frequency, wav_header.sampling_fre)) {
       // TODO? とりあえず 1 より大きい場合バグると思うので弾く
+      console.log('flag111  ' + frequency + ' ' + tweak_length(frequency, wav_header.sampling_fre))
       console.error('\'tweak_length(frequency, wav_header.sampling_fre)\' is greater than \'1\'.');
     }
 
@@ -324,6 +340,8 @@
 
 
   let v0_A4_frequency = input_v0_A4_frequency.value;
+  let v1_A4_frequency = input_v1_A4_frequency.value;
+  let v2_A4_frequency = input_v2_A4_frequency.value;
   let frequency_list = [];
   // calc frequency and create frequency list
   function create_frequency_list(A4_frequency, voice) {
@@ -341,33 +359,38 @@
   let wav_length = 1;
   // frequency_list の周波数を元にサイン波を作成し，それを配列に保存する
   function set_sin_wave(voice) {
+    wav_files[voice] = [];
     for (let i = 0; i < frequency_list[voice].length; i++) {
-      wav_files[i] = create_sin_wave(wav_header, frequency_list[voice][i], wav_length);
+      wav_files[voice][i] = create_sin_wave(wav_header, frequency_list[voice][i], wav_length);
     }
   };
 
   function set_square_wave(voice) {
+    wav_files[voice] = [];
     for (let i = 0; i < frequency_list[voice].length; i++) {
-      wav_files[i] = create_square_wave(wav_header, frequency_list[voice][i], wav_length);
+      wav_files[voice][i] = create_square_wave(wav_header, frequency_list[voice][i], wav_length);
     }
   }
 
   function set_sawtooth_wave(voice) {
+    wav_files[voice] = [];
     for (let i = 0; i < frequency_list[voice].length; i++) {
-      wav_files[i] = create_sawtooth_wave(wav_header, frequency_list[voice][i], wav_length);
+      wav_files[voice][i] = create_sawtooth_wave(wav_header, frequency_list[voice][i], wav_length);
     }
   }
 
   // create audio tags
   let audio = [];
   let wav_files_blob = [];
-  function create_audio () {
+  function create_audio (voice) {
+    audio[voice] = [];
+    wav_files_blob[voice] = [];
     for (let i = 0; i < key_list.length; i++) {
-      wav_files_blob[i] = new Blob([wav_files[i]], {type: 'audio/wav'});
-      audio[i] = document.createElement('audio');
-      audio[i].src = URL.createObjectURL(wav_files_blob[i]);
-      audio[i].loop = true;
-      audio_tags_area.appendChild(audio[i]);
+      wav_files_blob[voice][i] = new Blob([wav_files[voice][i]], {type: 'audio/wav'});
+      audio[voice][i] = document.createElement('audio');
+      audio[voice][i].src = URL.createObjectURL(wav_files_blob[voice][i]);
+      audio[voice][i].loop = true;
+      audio_tags_area[voice].appendChild(audio[voice][i]);
       console.log(i);
     }
   };
@@ -379,9 +402,9 @@
   }
 
   // A4 の周波数が変更された時に audio タグを変更する為に呼び出される関数
-  function update_audio(selected_wave_type, voice) {
+  function update_audio(selected_wave_type, A4_frequency, voice) {
     console.log(selected_wave_type);
-    create_frequency_list(v0_A4_frequency, voice);
+    create_frequency_list(A4_frequency, voice);
     if (selected_wave_type === 'sin') {
       set_sin_wave(voice);
     } else if (selected_wave_type === 'square') {
@@ -391,8 +414,8 @@
     } else {
       set_sin_wave(voice);
     }
-    remove_all_children(audio_tags_area);
-    create_audio();
+    remove_all_children(audio_tags_area[voice]);
+    create_audio(voice);
   }
 
   let selected_wave_type = [];
@@ -400,22 +423,46 @@
   input_v0_A4_frequency.onchange = () => {
     v0_A4_frequency = input_v0_A4_frequency.value;
     console.log(audio[0].src);
-    update_audio(selected_wave_type, 0);
+    update_audio(selected_wave_type[0], v0_A4_frequency, 0);
     console.log(audio[0].src);
+  }
+
+  input_v1_A4_frequency.onchange = () => {
+    console.log('flag input v1 freque.onche')
+    v1_A4_frequency = input_v1_A4_frequency.value;
+    update_audio(selected_wave_type[1], v1_A4_frequency, 1);
+  }
+
+  input_v2_A4_frequency.onchange = () => {
+    console.log('flag input v2 freque.onche')
+    v2_A4_frequency = input_v2_A4_frequency.value;
+    update_audio(selected_wave_type[2], v2_A4_frequency, 2);
   }
 
   // 初期化
   (function () {
     create_frequency_list(v0_A4_frequency, 0);
     set_sin_wave(0);
-    create_audio();
+    create_audio(0);
+
+    create_frequency_list(v1_A4_frequency, 1);
+    set_sin_wave(1);
+    create_audio(1);
+
+    create_frequency_list(v2_A4_frequency, 2);
+    set_sin_wave(2);
+    create_audio(2);
   })();
 
   console.log(wav_files[0]);
 
   function audio_play(n) {
     console.log('onmousedown, pushed by ' + n);
-    audio[n].play();
+    let start = new Date().getTime();
+    for (let i = 0; i < audio.length; i++) {
+      audio[i][n].play();
+    }
+    console.log('time: ' +( start - new Date().getTime()));
     if (((n % 12) < 5 && (n % 12) % 2 == 0) || ((5 <= (n % 12)) && (n % 12) % 2 == 1)) {
       key_list[n].classList.remove('not_pressed_whitekey');
       key_list[n].classList.add('pressed_whitekey');
@@ -431,8 +478,10 @@
 
   function audio_stop(n) {
     console.log('mouseout or onmouseup. by ' + n);
-    audio[n].pause();
-    audio[n].currentTime = 0;
+    for (let i = 0; i < audio.length; i++) {
+      audio[i][n].pause();
+      audio[i][n].currentTime = 0;
+    }
     console.log(n + ' ' + (n % 12) + ' ' + (((n % 12) < 5 && (n % 12) % 2 == 0) || ((5 <= (n % 12)) && (n % 12) % 2 == 1)))
     if (((n % 12) < 5 && (n % 12) % 2 == 0) || ((5 <= (n % 12)) && (n % 12) % 2 == 1)) {
       key_list[n].classList.remove('pressed_whitekey');
@@ -447,18 +496,53 @@
 
   input_v0_sin_wave.onclick = () => {
     selected_wave_type[0] = 'sin';
-    update_audio(selected_wave_type[0], 0);
+    update_audio(selected_wave_type[0], v0_A4_frequency, 0);
     console.log('change sin');
   }
 
   input_v0_square_wave.onclick = () => {
     selected_wave_type[0] = 'square';
-    update_audio(selected_wave_type[0], 0);
+    update_audio(selected_wave_type[0], v0_A4_frequency, 0);
   }
 
   input_v0_sawtooth_wave.onclick = () => {
     selected_wave_type[0] = 'sawtooth';
-    update_audio(selected_wave_type[0], 0);
+    update_audio(selected_wave_type[0], v0_A4_frequency, 0);
+  }
+
+
+  input_v1_sin_wave.onclick = () => {
+    selected_wave_type[1] = 'sin';
+    update_audio(selected_wave_type[1], v1_A4_frequency, 1);
+  }
+
+  input_v1_square_wave.onclick = () => {
+    selected_wave_type[1] = 'square';
+    update_audio(selected_wave_type[1], v1_A4_frequency, 1);
+  }
+
+  input_v1_sawtooth_wave.onclick = () => {
+    selected_wave_type[1] = 'sawtooth';
+    update_audio(selected_wave_type[1], v1_A4_frequency, 1);
+  }
+
+
+  input_v2_sin_wave.onclick = () => {
+    console.log('v2 sin');
+    selected_wave_type[2] = 'sin';
+    update_audio(selected_wave_type[2], v2_A4_frequency, 2);
+  }
+
+  input_v2_square_wave.onclick = () => {
+    console.log('v2 squ');
+    selected_wave_type[2] = 'square';
+    update_audio(selected_wave_type[2], v2_A4_frequency, 2);
+  }
+
+  input_v2_sawtooth_wave.onclick = () => {
+    console.log('v2 saw');
+    selected_wave_type[2] = 'sawtooth';
+    update_audio(selected_wave_type[2], v2_A4_frequency, 2);
   }
 
 })();
