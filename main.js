@@ -1,10 +1,10 @@
 (function () {
   'use strict';
 
-  const input_A4_frequency = document.getElementById('A4_frequency')
-  const input_sin_wave = document.getElementById('sin_wave');
-  const input_square_wave = document.getElementById('square_wave');
-  const input_sawtooth_wave = document.getElementById('sawtooth_wave');
+  const input_v0_A4_frequency = document.getElementById('v0_A4_frequency')
+  const input_v0_sin_wave = document.getElementById('v0_sin_wave');
+  const input_v0_square_wave = document.getElementById('v0_square_wave');
+  const input_v0_sawtooth_wave = document.getElementById('v0_sawtooth_wave');
   const audio_tags_area = document.getElementById('audio_tags');
   const keyborad = document.getElementById('keyboard');
 
@@ -323,7 +323,7 @@
   }
 
 
-  let A4_frequency = input_A4_frequency.value;
+  let A4_frequency = input_v0_A4_frequency.value;
   let frequency_list = [];
   // calc frequency and create frequency list
   function create_frequency_list() {
@@ -395,8 +395,8 @@
 
   let selected_wave_type;
 
-  input_A4_frequency.onchange = () => {
-    A4_frequency = input_A4_frequency.value;
+  input_v0_A4_frequency.onchange = () => {
+    A4_frequency = input_v0_A4_frequency.value;
     console.log(audio[0].src);
     update_audio(selected_wave_type);
     console.log(audio[0].src);
@@ -443,18 +443,18 @@
     // TODO
   }
 
-  input_sin_wave.onclick = () => {
+  input_v0_sin_wave.onclick = () => {
     selected_wave_type = 'sin';
     update_audio(selected_wave_type);
     console.log('change sin');
   }
 
-  input_square_wave.onclick = () => {
+  input_v0_square_wave.onclick = () => {
     selected_wave_type = 'square';
     update_audio(selected_wave_type);
   }
 
-  input_sawtooth_wave.onclick = () => {
+  input_v0_sawtooth_wave.onclick = () => {
     selected_wave_type = 'sawtooth';
     update_audio(selected_wave_type);
   }

@@ -8,16 +8,18 @@
 <body>
   <div id="synthesizer">
     <div id="control">
-      <input type="number" id="A4_frequency" value="440">
-      <div id="select_wave_div">
-        <input type="radio" name="wave_type" id="sin_wave" value="sin" checked>
-          <label for="sin_wave">sine wave</label>
-        <br>
-        <input type="radio" name="wave_type" id="square_wave" value="square">
-          <label for="square_wave">square wave</label>
-        <br>
-        <input type="radio" name="wave_type" id="sawtooth_wave" value="sawtooth">
-          <label for="sawtooth_wave">sawtooth wave</label>
+      <div id="voice0">
+        <input type="number" id="v0_A4_frequency" value="440">
+        <div id="v0_select_wave_div">
+          <input type="radio" name="wave_type" id="v0_sin_wave" value="sin" checked>
+            <label for="v0_sin_wave">sine wave</label>
+          <br>
+          <input type="radio" name="wave_type" id="v0_square_wave" value="square">
+            <label for="v0_square_wave">square wave</label>
+          <br>
+          <input type="radio" name="wave_type" id="v0_sawtooth_wave" value="sawtooth">
+            <label for="v0_sawtooth_wave">sawtooth wave</label>
+        </div>
       </div>
       <div id="audio_tags"></div>
     </div>
