@@ -323,37 +323,38 @@
   }
 
 
-  let A4_frequency = input_v0_A4_frequency.value;
+  let v0_A4_frequency = input_v0_A4_frequency.value;
   let frequency_list = [];
   // calc frequency and create frequency list
-  function create_frequency_list() {
-    frequency_list[9] = A4_frequency;
+  function create_frequency_list(A4_frequency, voice) {
+    frequency_list[voice] = []
+    frequency_list[voice][9] = A4_frequency;
     for (let i = 9; i < key_list.length; i++) {
-      frequency_list[i] = A4_frequency * Math.pow(2, (i - 9) / 12);
+      frequency_list[voice][i] = A4_frequency * Math.pow(2, (i - 9) / 12);
     }
     for (let i = 0; i < 9; i++) {
-      frequency_list[i] = frequency_list[i + 12] / 2;
+      frequency_list[voice][i] = frequency_list[voice][i + 12] / 2;
     }
   };
 
   let wav_files = [];
   let wav_length = 1;
   // frequency_list の周波数を元にサイン波を作成し，それを配列に保存する
-  function set_sin_wave() {
-    for (let i = 0; i < frequency_list.length; i++) {
-      wav_files[i] = create_sin_wave(wav_header, frequency_list[i], wav_length);
+  function set_sin_wave(voice) {
+    for (let i = 0; i < frequency_list[voice].length; i++) {
+      wav_files[i] = create_sin_wave(wav_header, frequency_list[voice][i], wav_length);
     }
   };
 
-  function set_square_wave() {
-    for (let i = 0; i < frequency_list.length; i++) {
-      wav_files[i] = create_square_wave(wav_header, frequency_list[i], wav_length);
+  function set_square_wave(voice) {
+    for (let i = 0; i < frequency_list[voice].length; i++) {
+      wav_files[i] = create_square_wave(wav_header, frequency_list[voice][i], wav_length);
     }
   }
 
-  function set_sawtooth_wave() {
-    for (let i = 0; i < frequency_list.length; i++) {
-      wav_files[i] = create_sawtooth_wave(wav_header, frequency_list[i], wav_length);
+  function set_sawtooth_wave(voice) {
+    for (let i = 0; i < frequency_list[voice].length; i++) {
+      wav_files[i] = create_sawtooth_wave(wav_header, frequency_list[voice][i], wav_length);
     }
   }
 
@@ -378,16 +379,17 @@
   }
 
   // A4 の周波数が変更された時に audio タグを変更する為に呼び出される関数
-  function update_audio(selected_wave_type) {
-    create_frequency_list();
+  function update_audio(selected_wave_type, voice) {
+    console.log(selected_wave_type);
+    create_frequency_list(v0_A4_frequency, voice);
     if (selected_wave_type === 'sin') {
-      set_sin_wave();
+      set_sin_wave(voice);
     } else if (selected_wave_type === 'square') {
-      set_square_wave();
+      set_square_wave(voice);
     } else if (selected_wave_type === 'sawtooth') {
-      set_sawtooth_wave();
+      set_sawtooth_wave(voice);
     } else {
-      set_sin_wave();
+      set_sin_wave(voice);
     }
     remove_all_children(audio_tags_area);
     create_audio();
@@ -396,16 +398,16 @@
   let selected_wave_type;
 
   input_v0_A4_frequency.onchange = () => {
-    A4_frequency = input_v0_A4_frequency.value;
+    v0_A4_frequency = input_v0_A4_frequency.value;
     console.log(audio[0].src);
-    update_audio(selected_wave_type);
+    update_audio(selected_wave_type, 0);
     console.log(audio[0].src);
   }
 
   // 初期化
   (function () {
-    create_frequency_list();
-    set_sin_wave();
+    create_frequency_list(v0_A4_frequency, 0);
+    set_sin_wave(0);
     create_audio();
   })();
 
@@ -445,18 +447,18 @@
 
   input_v0_sin_wave.onclick = () => {
     selected_wave_type = 'sin';
-    update_audio(selected_wave_type);
+    update_audio(selected_wave_type, 0);
     console.log('change sin');
   }
 
   input_v0_square_wave.onclick = () => {
     selected_wave_type = 'square';
-    update_audio(selected_wave_type);
+    update_audio(selected_wave_type, 0);
   }
 
   input_v0_sawtooth_wave.onclick = () => {
     selected_wave_type = 'sawtooth';
-    update_audio(selected_wave_type);
+    update_audio(selected_wave_type, 0);
   }
 
 })();
