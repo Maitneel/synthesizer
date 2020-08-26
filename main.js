@@ -1,20 +1,33 @@
 (function () {
   'use strict';
 
+  // この辺時間があればもう少し for を使うとかして見やすくしたい
+  const div_voice0 = document.getElementById('voice0');
   const input_v0_A4_frequency = document.getElementById('v0_A4_frequency')
   const input_v0_sin_wave = document.getElementById('v0_sin_wave');
+  const input_v0_sin_wave_label = document.getElementById('v0_sin_wave_label');
   const input_v0_square_wave = document.getElementById('v0_square_wave');
+  const input_v0_square_wave_label = document.getElementById('v0_square_wave_label');
   const input_v0_sawtooth_wave = document.getElementById('v0_sawtooth_wave');
+  const input_v0_sawtooth_wave_label = document.getElementById('v0_sawtooth_wave_label');
 
+  const div_voice1 = document.getElementById('voice1');
   const input_v1_A4_frequency = document.getElementById('v1_A4_frequency')
   const input_v1_sin_wave = document.getElementById('v1_sin_wave');
+  const input_v1_sin_wave_label = document.getElementById('v1_sin_wave_label');
   const input_v1_square_wave = document.getElementById('v1_square_wave');
+  const input_v1_square_wave_label = document.getElementById('v1_square_wave_label');
   const input_v1_sawtooth_wave = document.getElementById('v1_sawtooth_wave');
+  const input_v1_sawtooth_wave_label = document.getElementById('v1_sawtooth_wave_label');
 
+  const div_voice2 = document.getElementById('voice2');
   const input_v2_A4_frequency = document.getElementById('v2_A4_frequency')
   const input_v2_sin_wave = document.getElementById('v2_sin_wave');
+  const input_v2_sin_wave_label = document.getElementById('v2_sin_wave_label');
   const input_v2_square_wave = document.getElementById('v2_square_wave');
+  const input_v2_square_wave_label = document.getElementById('v2_square_wave_label');
   const input_v2_sawtooth_wave = document.getElementById('v2_sawtooth_wave');
+  const input_v2_sawtooth_wave_label = document.getElementById('v2_sawtooth_wave_label');
   
   const v0_audio_tags_area = document.getElementById('v0_audio_tags');
   const v1_audio_tags_area = document.getElementById('v1_audio_tags');
@@ -22,6 +35,14 @@
   const keyborad = document.getElementById('keyboard');
 
   const audio_tags_area = [v0_audio_tags_area, v1_audio_tags_area, v2_audio_tags_area];
+  const div_voice = [div_voice0, div_voice1, div_voice2];
+  const v0_label = [input_v0_sin_wave_label, input_v0_square_wave_label, input_v0_sawtooth_wave_label];
+  const v1_label = [input_v1_sin_wave_label, input_v1_square_wave_label, input_v1_sawtooth_wave_label];
+  const v2_label = [input_v2_sin_wave_label, input_v2_square_wave_label, input_v2_sawtooth_wave_label];
+  const labels = [v0_label, v1_label, v2_label];
+
+
+
 
 
   let whitekey_div = [];
@@ -425,10 +446,10 @@
 
   // 初期化
   (function () {
+    /*
     create_frequency_list(v0_A4_frequency, 0);
     set_sin_wave(0);
     create_audio(0);
-// /*
     create_frequency_list(v1_A4_frequency, 1);
     set_sin_wave(1);
     create_audio(1);
@@ -479,55 +500,100 @@
     // TODO
   }
 
+  let voice_power_on = [false, false, false];
+
+  input_v0_A4_frequency.onclick = () => {
+    voice_power_on[0] ^= 1;
+  }
+
   input_v0_sin_wave.onclick = () => {
     selected_wave_type[0] = 'sin';
     update_audio(selected_wave_type[0], v0_A4_frequency, 0);
     console.log('change sin');
+    voice_power_on[0] ^= 1;
   }
 
   input_v0_square_wave.onclick = () => {
     selected_wave_type[0] = 'square';
     update_audio(selected_wave_type[0], v0_A4_frequency, 0);
+    voice_power_on[0] ^= 1;
   }
 
   input_v0_sawtooth_wave.onclick = () => {
     selected_wave_type[0] = 'sawtooth';
     update_audio(selected_wave_type[0], v0_A4_frequency, 0);
+    voice_power_on[0] ^= 1;
   }
 
+
+  input_v1_A4_frequency.onclick = () => {
+    voice_power_on[1] ^= 1;
+  }
 
   input_v1_sin_wave.onclick = () => {
     selected_wave_type[1] = 'sin';
     update_audio(selected_wave_type[1], v1_A4_frequency, 1);
+    voice_power_on[1] ^= 1;
   }
 
   input_v1_square_wave.onclick = () => {
     selected_wave_type[1] = 'square';
     update_audio(selected_wave_type[1], v1_A4_frequency, 1);
+    voice_power_on[1] ^= 1;
   }
 
   input_v1_sawtooth_wave.onclick = () => {
     selected_wave_type[1] = 'sawtooth';
     update_audio(selected_wave_type[1], v1_A4_frequency, 1);
+    voice_power_on[1] ^= 1;
   }
 
+  input_v2_A4_frequency.onclick = () => {
+    voice_power_on[2] ^= 1;
+  }
 
   input_v2_sin_wave.onclick = () => {
     console.log('v2 sin');
     selected_wave_type[2] = 'sin';
     update_audio(selected_wave_type[2], v2_A4_frequency, 2);
+    voice_power_on[2] ^= 1;
   }
 
   input_v2_square_wave.onclick = () => {
     console.log('v2 squ');
     selected_wave_type[2] = 'square';
     update_audio(selected_wave_type[2], v2_A4_frequency, 2);
+    voice_power_on[2] ^= 1;
   }
 
   input_v2_sawtooth_wave.onclick = () => {
     console.log('v2 saw');
     selected_wave_type[2] = 'sawtooth';
     update_audio(selected_wave_type[2], v2_A4_frequency, 2);
+    voice_power_on[2] ^= 1;
   }
+
+  for (let i = 0; i < div_voice.length; i++) {
+    div_voice[i].onclick = () => {
+      voice_power_on[i] ^= 1;
+      if (voice_power_on[i] == true) {
+        div_voice[i].classList.remove('voice_off');
+        div_voice[i].classList.add('vocie_on');
+      } else {
+        div_voice[i].classList.remove('vocie_on');
+        div_voice[i].classList.add('voice_off');
+      }
+    }
+  }
+
+  for (let i = 0; i < labels.length; i++) {
+    for (let j = 0; j < labels[i].length; j++) {
+      labels[i][j].onclick = () => {
+        voice_power_on[i] ^= 1;
+      }
+    }
+  }
+  console.log(labels);
+  console.log(v0_label);
 
 })();
