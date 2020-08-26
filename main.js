@@ -248,11 +248,6 @@
       console.error('bit_rate dose not 16.');
       return;
     }
-    
-    if (1 < tweak_length(frequency, wav_header.sampling_fre)) {
-      // TODO? とりあえず 1 より大きい場合バグると思うので弾く
-      console.error('\'tweak_length(frequency, wav_header.sampling_fre)\' is greater than \'1\'.');
-    }
 
     set_sizes(wav_header, frequency, length);
     let header_bin = create_header_ui8a_bin(wav_header);
@@ -271,12 +266,6 @@
     if (wav_header.bit_rate != 16) {
       console.error('bit_rate dose not 16.');
       return;
-    }
-    
-    if (1 < tweak_length(frequency, wav_header.sampling_fre)) {
-      // TODO? とりあえず 1 より大きい場合バグると思うので弾く
-      console.log('flag111  ' + frequency + ' ' + tweak_length(frequency, wav_header.sampling_fre))
-      console.error('\'tweak_length(frequency, wav_header.sampling_fre)\' is greater than \'1\'.');
     }
 
     set_sizes(wav_header, frequency, length);
@@ -319,11 +308,6 @@
     if (wav_header.bit_rate != 16) {
       console.error('bit_rate dose not 16.');
       return;
-    }
-    
-    if (1 < tweak_length(frequency, wav_header.sampling_fre)) {
-      // TODO? とりあえず 1 より大きい場合バグると思うので弾く
-      console.error('\'tweak_length(frequency, wav_header.sampling_fre)\' is greater than \'1\'.');
     }
 
     set_sizes(wav_header, frequency, length);
