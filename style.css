@@ -10,13 +10,26 @@
 #control {
   width: 100%;
   height: 60%;
+  overflow: hidden;
   background-color: yellow;
+  position: relative;
 }
+
+.voice_control {
+  height: 25%;
+  width: 18%;
+  margin-left: 1%;
+  margin-top: 1%;
+  border: double;
+  border-width: 3px;
+  padding: 0.5%;
+}
+
 
 #keyboard {
   width: 1396px;
   height: 40%;
-  background: blue;
+  background: #000000;
   margin-left: auto;
   margin-right: auto;
 }
