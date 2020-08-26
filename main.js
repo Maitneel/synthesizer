@@ -123,12 +123,12 @@
     return result;
   }
 
-  function tweak_length(frequency, sampling_fre) {
-    return (sampling_fre / frequency * Math.max(Math.floor(frequency) , 2) / sampling_fre);
+  function tweak_length(frequency, sampling_fre, length) {
+    return (sampling_fre / frequency * Math.max(Math.floor(frequency * length) , 2) / sampling_fre);
   }
 
   function set_sizes(wav_header, frequency, length) {
-    wav_header.data_size = wav_header.block_size * length * Math.round(wav_header.sampling_fre * tweak_length(frequency, wav_header.sampling_fre));
+    wav_header.data_size = wav_header.block_size * Math.round(wav_header.sampling_fre * tweak_length(frequency, wav_header.sampling_fre, length));
     wav_header.file_size = 4 + 4 + 4 + wav_header.fmt_size + 4 + 4 + wav_header.data_size;
   }
 
@@ -356,7 +356,7 @@
   };
 
   let wav_files = [];
-  let wav_length = 1;
+  let wav_length = 0.5;
   // frequency_list の周波数を元にサイン波を作成し，それを配列に保存する
   function set_sin_wave(voice) {
     wav_files[voice] = [];
@@ -444,7 +444,7 @@
     create_frequency_list(v0_A4_frequency, 0);
     set_sin_wave(0);
     create_audio(0);
-
+// /*
     create_frequency_list(v1_A4_frequency, 1);
     set_sin_wave(1);
     create_audio(1);
@@ -452,6 +452,7 @@
     create_frequency_list(v2_A4_frequency, 2);
     set_sin_wave(2);
     create_audio(2);
+    // */
   })();
 
   console.log(wav_files[0]);
