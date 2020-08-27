@@ -454,7 +454,9 @@
     console.log('onmousedown, pushed by ' + n);
     let start = new Date().getTime();
     for (let i = 0; i < audio.length; i++) {
-      audio[i][n].play();
+      if (voice_power_on[i] == true) {
+        audio[i][n].play();finpininin
+      }
     }
     console.log('time: ' +( start - new Date().getTime()));
     if (((n % 12) < 5 && (n % 12) % 2 == 0) || ((5 <= (n % 12)) && (n % 12) % 2 == 1)) {
@@ -473,8 +475,10 @@
   function audio_stop(n) {
     console.log('mouseout or onmouseup. by ' + n);
     for (let i = 0; i < audio.length; i++) {
-      audio[i][n].pause();
-      audio[i][n].currentTime = 0;
+      if (voice_power_on[i] == true) {
+        audio[i][n].pause();
+        audio[i][n].currentTime = 0;
+      }
     }
     console.log(n + ' ' + (n % 12) + ' ' + (((n % 12) < 5 && (n % 12) % 2 == 0) || ((5 <= (n % 12)) && (n % 12) % 2 == 1)))
     if (((n % 12) < 5 && (n % 12) % 2 == 0) || ((5 <= (n % 12)) && (n % 12) % 2 == 1)) {
@@ -489,18 +493,24 @@
   }
 
   let voice_power_on = [false, false, false];
+  let voice_changed = [true, true, true];
 
 
   for (let i = 0; i < inputs_A4_frequency.length; i++) {
-    inputs_A4_frequency.onchange = () => {
+    inputs_A4_frequency[i].onchange = () => {
       A4_frequency[i] = inputs_A4_frequency[i].value;
-      update_audio(selected_wave_type[i], A4_frequency[i], i);
-      console.log(audio[0].src);
+      if (voice_power_on[i] == true) {
+        update_audio(selected_wave_type[i], A4_frequency[i], i);
+        console.log(audio[0].src);
+      } else {
+        voice_changed[i] = true;
+      }
     }
   }
 
-  for (let i; i < inputs_A4_frequency.length; i++) {
+  for (let i = 0; i < inputs_A4_frequency.length; i++) {
     inputs_A4_frequency[i].onclick = () => {
+      console.log('input a4 click');
       voice_power_on[i] ^= 1;
     }
   }
@@ -508,7 +518,11 @@
   for (let i = 0; i < inputs_sin_wave.length; i++) {
     inputs_sin_wave[i].onclick = () => {
       selected_wave_type[i] = 'sin';
-      update_audio(selected_wave_type[i], A4_frequency[i], i);
+      if (voice_power_on[i] == true) {
+        update_audio(selected_wave_type[i], A4_frequency[i], i);
+      } else {
+        voice_changed[i] = true;
+      }
       voice_power_on[i] ^= 1;
     }
   }
@@ -516,7 +530,11 @@
   for (let i = 0; i < inputs_square_wave.length; i++) {
     inputs_square_wave[i].onclick = () => {
       selected_wave_type[i] = 'square';
-      update_audio(selected_wave_type[0], A4_frequency[i], i);
+      if (voice_power_on[i] == true) {
+        update_audio(selected_wave_type[0], A4_frequency[i], i);
+      } else {
+        voice_changed[i] = true;
+      }
       voice_power_on[i] ^= 1;
     }
   }
@@ -524,7 +542,11 @@
   for (let i = 0; i < inputs_sawtooth_wave.length; i++) {
     inputs_sawtooth_wave[i].onclick = () => {
       selected_wave_type[i] = 'sawtooth';
-      update_audio(selected_wave_type[i], A4_frequency[i], i);
+      if (voice_power_on[i] == true) {
+        update_audio(selected_wave_type[i], A4_frequency[i], i);
+      } else {
+        voice_changed[i] = true;
+      }
       voice_power_on[i] ^= 1;
     }
   }
@@ -532,6 +554,9 @@
     div_voice[i].onclick = () => {
       voice_power_on[i] ^= 1;
       if (voice_power_on[i] == true) {
+        if (voice_changed[i] == true) {
+          update_audio(selected_wave_type[i], A4_frequency[i], i);
+        }
         div_voice[i].classList.remove('voice_off');
         div_voice[i].classList.add('vocie_on');
       } else {
