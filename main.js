@@ -38,7 +38,7 @@
   const inputs_A4_frequency = [input_v0_A4_frequency, input_v1_A4_frequency, input_v2_A4_frequency];
   const inputs_sin_wave = [input_v0_sin_wave, input_v1_sin_wave, input_v2_sin_wave];
   const inputs_square_wave = [input_v0_square_wave, input_v1_square_wave, input_v2_square_wave];
-  const inputs_sawtooth_wave = [input_v0_sawtooth_wave_label, input_v1_sawtooth_wave, input_v2_sawtooth_wave];
+  const inputs_sawtooth_wave = [input_v0_sawtooth_wave, input_v1_sawtooth_wave, input_v2_sawtooth_wave];
   const div_voice = [div_voice0, div_voice1, div_voice2];
   const v0_label = [input_v0_sin_wave_label, input_v0_square_wave_label, input_v0_sawtooth_wave_label];
   const v1_label = [input_v1_sin_wave_label, input_v1_square_wave_label, input_v1_sawtooth_wave_label];
