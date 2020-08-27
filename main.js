@@ -455,7 +455,7 @@
     let start = new Date().getTime();
     for (let i = 0; i < audio.length; i++) {
       if (voice_power_on[i] == true) {
-        audio[i][n].play();finpininin
+        audio[i][n].play();
       }
     }
     console.log('time: ' +( start - new Date().getTime()));
