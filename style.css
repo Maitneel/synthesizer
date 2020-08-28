@@ -22,12 +22,26 @@
 
 .voice_control {
   height: 25%;
-  width: 18%;
+  width: 23%;
   margin-left: 1%;
   margin-top: 1%;
   border-style: double;
   border-width: 3px;
   padding: 0.5%;
+}
+
+.select_wave_div {
+  width: 50%;
+  float: left;
+}
+
+.volume_area {
+  width: 50%;
+  float: left;
+}
+
+.voice_volume {
+  width: 90%;
 }
 
 .voice_off {
