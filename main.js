@@ -10,6 +10,7 @@
   const input_v0_square_wave_label = document.getElementById('v0_square_wave_label');
   const input_v0_sawtooth_wave = document.getElementById('v0_sawtooth_wave');
   const input_v0_sawtooth_wave_label = document.getElementById('v0_sawtooth_wave_label');
+  const input_v0_volume = document.getElementById('v0_volume');
 
   const div_voice1 = document.getElementById('voice1');
   const input_v1_A4_frequency = document.getElementById('v1_A4_frequency')
@@ -19,6 +20,7 @@
   const input_v1_square_wave_label = document.getElementById('v1_square_wave_label');
   const input_v1_sawtooth_wave = document.getElementById('v1_sawtooth_wave');
   const input_v1_sawtooth_wave_label = document.getElementById('v1_sawtooth_wave_label');
+  const input_v1_volume = document.getElementById('v1_volume');
 
   const div_voice2 = document.getElementById('voice2');
   const input_v2_A4_frequency = document.getElementById('v2_A4_frequency')
@@ -28,6 +30,7 @@
   const input_v2_square_wave_label = document.getElementById('v2_square_wave_label');
   const input_v2_sawtooth_wave = document.getElementById('v2_sawtooth_wave');
   const input_v2_sawtooth_wave_label = document.getElementById('v2_sawtooth_wave_label');
+  const input_v2_volume = document.getElementById('v2_volume');
   
   const v0_audio_tags_area = document.getElementById('v0_audio_tags');
   const v1_audio_tags_area = document.getElementById('v1_audio_tags');
@@ -44,6 +47,7 @@
   const v1_label = [input_v1_sin_wave_label, input_v1_square_wave_label, input_v1_sawtooth_wave_label];
   const v2_label = [input_v2_sin_wave_label, input_v2_square_wave_label, input_v2_sawtooth_wave_label];
   const labels = [v0_label, v1_label, v2_label];
+  const input_volume = [input_v0_volume, input_v1_volume, input_v2_volume];
 
 
 
@@ -402,6 +406,7 @@
       audio[voice][i] = document.createElement('audio');
       audio[voice][i].src = URL.createObjectURL(wav_files_blob[voice][i]);
       audio[voice][i].loop = true;
+      audio[voice][i].volume = input_volume[voice].value;
       audio_tags_area[voice].appendChild(audio[voice][i]);
       console.log(i);
     }
@@ -573,6 +578,13 @@
       }
     }
   }
+
+  for (let i = 0; i < input_volume.length; i++) {
+    input_volume[i].onclick = () => {
+      voice_power_on[i] ^= 1;
+    }
+  }
+
   console.log(labels);
   console.log(v0_label);
 
