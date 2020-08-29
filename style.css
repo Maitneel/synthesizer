@@ -20,14 +20,25 @@
   margin-right: auto;
 }
 
+#synth_section {
+  height: 100%;
+  width: 24%;
+  margin-left: 1%;
+  overflow: hidden;
+  float: left;
+}
+
+#organ_section {
+  float: left;
+}
+
 .voice_control {
   height: 25%;
-  width: 23%;
-  margin-left: 1%;
-  margin-top: 1%;
+  width: 93.5%;
+  margin-top: 4.25%;
   border-style: double;
   border-width: 3px;
-  padding: 0.5%;
+  padding: 2.2%;
 }
 
 .select_wave_div {

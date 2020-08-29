@@ -8,70 +8,74 @@
 <body>
   <div id="synthesizer">
     <div id="control">
-      <div id="voice0" class="voice_control voice_off">
-        <input type="number" id="v0_A4_frequency" c class="A4_frequency" value="440">
-        <div>
-          <div id="v0_select_wave_div" class="select_wave_div">
-            <input type="radio" name="v0_wave_type" id="v0_sin_wave" value="sin" checked>
-              <label for="v0_sin_wave" id="v0_sin_wave_label">sine wave</label>
-            <br>
-            <input type="radio" name="v0_wave_type" id="v0_square_wave" value="square">
-              <label for="v0_square_wave" id="v0_square_wave_label">square wave</label>
-            <br>
-            <input type="radio" name="v0_wave_type" id="v0_sawtooth_wave" value="sawtooth">
-              <label for="v0_sawtooth_wave" id="v0_sawtooth_wave_label">sawtooth wave</label>
-          </div>
-          <div class="volume_area">
-            <span>volume</span><br>
-            <input type="range" class="voice_volume" id="v0_volume" min="0" max="1" step="any" value="1">
-          </div>
-        </div>
-      </div>
-      <div id="voice1" class="voice_control voice_off">
-        <input type="number" id="v1_A4_frequency" class="A4_frequency" value="440">
-        <div>
-          <div id="v1_select_wave_div" class="select_wave_div">
-            <input type="radio" name="v1_wave_type" id="v1_sin_wave" value="sin" checked>
-              <label for="v1_sin_wave" id="v1_sin_wave_label">sine wave</label>
-            <br>
-            <input type="radio" name="v1_wave_type" id="v1_square_wave" value="square">
-              <label for="v1_square_wave" id="v1_square_wave_label">square wave</label>
-            <br>
-            <input type="radio" name="v1_wave_type" id="v1_sawtooth_wave" value="sawtooth">
-              <label for="v1_sawtooth_wave" id="v1_sawtooth_wave_label">sawtooth wave</label>
-            <br>
-          </div>
-          <div class="volume_area">
-            <span>volume</span><br>
-            <input type="range" class="voice_volume" id="v1_volume" min="0" max="1" step="any" value="1">
+      <div id="synth_section">
+        <div id="voice0" class="voice_control voice_off">
+          <input type="number" id="v0_A4_frequency" c class="A4_frequency" value="440">
+          <div>
+            <div id="v0_select_wave_div" class="select_wave_div">
+              <input type="radio" name="v0_wave_type" id="v0_sin_wave" value="sin" checked>
+                <label for="v0_sin_wave" id="v0_sin_wave_label">sine wave</label>
+              <br>
+              <input type="radio" name="v0_wave_type" id="v0_square_wave" value="square">
+                <label for="v0_square_wave" id="v0_square_wave_label">square wave</label>
+              <br>
+              <input type="radio" name="v0_wave_type" id="v0_sawtooth_wave" value="sawtooth">
+                <label for="v0_sawtooth_wave" id="v0_sawtooth_wave_label">sawtooth wave</label>
+            </div>
+            <div class="volume_area">
+              <span>volume</span><br>
+              <input type="range" class="voice_volume" id="v0_volume" min="0" max="1" step="any" value="1">
+            </div>
           </div>
         </div>
+        <div id="voice1" class="voice_control voice_off">
+          <input type="number" id="v1_A4_frequency" class="A4_frequency" value="440">
+          <div>
+            <div id="v1_select_wave_div" class="select_wave_div">
+              <input type="radio" name="v1_wave_type" id="v1_sin_wave" value="sin" checked>
+                <label for="v1_sin_wave" id="v1_sin_wave_label">sine wave</label>
+              <br>
+              <input type="radio" name="v1_wave_type" id="v1_square_wave" value="square">
+                <label for="v1_square_wave" id="v1_square_wave_label">square wave</label>
+              <br>
+              <input type="radio" name="v1_wave_type" id="v1_sawtooth_wave" value="sawtooth">
+                <label for="v1_sawtooth_wave" id="v1_sawtooth_wave_label">sawtooth wave</label>
+              <br>
+            </div>
+            <div class="volume_area">
+              <span>volume</span><br>
+              <input type="range" class="voice_volume" id="v1_volume" min="0" max="1" step="any" value="1">
+            </div>
+          </div>
+          
+        </div>
+        <div id="voice2" class="voice_control voice_off">
+          <input type="number" id="v2_A4_frequency" class="A4_frequency" value="440">
+          <div>
+            <div id="v2_select_wave_div" class="select_wave_div">
+              <input type="radio" name="v2_wave_type" id="v2_sin_wave" value="sin" checked>
+                <label for="v2_sin_wave" id="v2_sin_wave_label">sine wave</label>
+              <br>
+              <input type="radio" name="v2_wave_type" id="v2_square_wave" value="square">
+                <label for="v2_square_wave" id="v2_square_wave_label">square wave</label>
+              <br>
+              <input type="radio" name="v2_wave_type" id="v2_sawtooth_wave" value="sawtooth">
+                <label for="v2_sawtooth_wave" id="v2_sawtooth_wave_label">sawtooth wave</label>
+              <br>
+            </div>
+            <div class="volume_area">
+              <span>volume</span><br>
+              <input type="range" class="voice_volume" id="v2_volume" min="0" max="1" step="any" value="1">
+            </div>
+          </div>
         
-      </div>
-      <div id="voice2" class="voice_control voice_off">
-        <input type="number" id="v2_A4_frequency" class="A4_frequency" value="440">
-        <div>
-          <div id="v2_select_wave_div" class="select_wave_div">
-            <input type="radio" name="v2_wave_type" id="v2_sin_wave" value="sin" checked>
-              <label for="v2_sin_wave" id="v2_sin_wave_label">sine wave</label>
-            <br>
-            <input type="radio" name="v2_wave_type" id="v2_square_wave" value="square">
-              <label for="v2_square_wave" id="v2_square_wave_label">square wave</label>
-            <br>
-            <input type="radio" name="v2_wave_type" id="v2_sawtooth_wave" value="sawtooth">
-              <label for="v2_sawtooth_wave" id="v2_sawtooth_wave_label">sawtooth wave</label>
-            <br>
-          </div>
-          <div class="volume_area">
-            <span>volume</span><br>
-            <input type="range" class="voice_volume" id="v2_volume" min="0" max="1" step="any" value="1">
-          </div>
         </div>
-      
+        <div id="v0_audio_tags"></div>
+        <div id="v1_audio_tags"></div>
+        <div id="v2_audio_tags"></div>
       </div>
-      <div id="v0_audio_tags"></div>
-      <div id="v1_audio_tags"></div>
-      <div id="v2_audio_tags"></div>
+      <div id="organ_section">
+      </div>
     </div>
     <div id="keyboard">
     </div>
