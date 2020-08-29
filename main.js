@@ -142,6 +142,9 @@
     return string;
   }
 
+  // データ1バイトあたりに分割する関数
+  // ただし，このデータは下位バイトから先に分割される
+  // → 0x12345678 は [0x78, 0x56, 0x34, 0x12] のように保存される
   function create_per0x100_array(n, byte_length) {
     let result = [];
     let i;
@@ -152,15 +155,18 @@
     return result;
   }
 
+  // wav ファイルの長さを調節する関数
   function tweak_length(frequency, sampling_fre, length) {
     return (sampling_fre / frequency * Math.max(Math.floor(frequency * length) , 2) / sampling_fre);
   }
 
+  // file_size, data_size を設定する関数
   function set_sizes(wav_header, frequency, length) {
     wav_header.data_size = wav_header.block_size * Math.round(wav_header.sampling_fre * tweak_length(frequency, wav_header.sampling_fre, length));
     wav_header.file_size = 4 + 4 + 4 + wav_header.fmt_size + 4 + 4 + wav_header.data_size;
   }
 
+  // wav ファイルの'RIFF'チャンクからデータサイズまでの情報を Uint8Arry に保存する関数
   function create_header_ui8a_bin(wav_header) {
     let index = 0;
     let header_bin = new Uint8Array(wav_header.data_size);
@@ -252,6 +258,7 @@
     }
   }
 
+  // wav ファイルを作成する関数
   function create_file(header_bin, wave) {
     let data_AB = new ArrayBuffer(wav_header.file_size + 4 + 4);
     let data_ui8a = new Uint8Array(data_AB);
@@ -271,6 +278,7 @@
   }
 
 
+  // サイン波を作成する関数
   function create_sin_wave(wav_header, frequency, length) {
     // bit_rateが16以外の場合は考えないものとする
     if (wav_header.bit_rate != 16) {
@@ -289,6 +297,7 @@
     return create_file(header_bin, wave);
   }
 
+  // 矩形波を作成する関数
   function create_square_wave(wav_header, frequency, length) {
     // bit_rateが16以外の場合は考えないものとする
     // create_sin_wave でもしたけど wav_header の file_size と data_size 以外変更するかは未定
@@ -331,6 +340,7 @@
   }
   */
 
+  // のこぎり波を作成する関数
   function create_sawtooth_wave(wav_header, frequency, length) {
     // bit_rateが16以外の場合は考えないものとする
     // create_sin_wave でもしたけど wav_header の file_size と data_size 以外変更するかは未定
@@ -455,6 +465,8 @@
 
   console.log(wav_files[0]);
 
+
+  // キーを押した時，音を鳴らす処理
   function audio_play(n) {
     console.log('onmousedown, pushed by ' + n);
     let start = new Date().getTime();
@@ -477,6 +489,7 @@
     // TODO
   }
 
+  // キーを離した時，音を止める処理
   function audio_stop(n) {
     console.log('mouseout or onmouseup. by ' + n);
     for (let i = 0; i < audio.length; i++) {
@@ -501,6 +514,10 @@
   let voice_changed = [true, true, true];
 
 
+
+  // ------------------------------------
+  // ↓ .onclick, .onchange などの処理指定
+  // ------------------------------------
   for (let i = 0; i < inputs_A4_frequency.length; i++) {
     inputs_A4_frequency[i].onchange = () => {
       A4_frequency[i] = inputs_A4_frequency[i].value;
