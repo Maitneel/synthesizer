@@ -37,6 +37,8 @@
   const v2_audio_tags_area = document.getElementById('v2_audio_tags');
   const keyborad = document.getElementById('keyboard');
 
+  const organ_control = document.getElementById('organ_section');
+
   const audio_tags_area = [v0_audio_tags_area, v1_audio_tags_area, v2_audio_tags_area];
   const inputs_A4_frequency = [input_v0_A4_frequency, input_v1_A4_frequency, input_v2_A4_frequency];
   const inputs_sin_wave = [input_v0_sin_wave, input_v1_sin_wave, input_v2_sin_wave];
@@ -509,6 +511,39 @@
     // key_list[n].className -= 'on_press_whitekey';
     // TODO
   }
+
+  // ---------------------------
+  // ------ Organ Section ------
+  // ---------------------------
+
+  let drawbar = [];
+  let drawbar_position = [];
+  (function () {
+    for (let i = 0; i < 9; i++) {
+      drawbar[i] = document.createElement('div');
+      drawbar[i].className = 'drawbar';
+      organ_control.appendChild(drawbar[i]);
+      drawbar_position[i] = [];
+      for (let j = 0; j < 9; j++) {
+        drawbar_position[i][j] = document.createElement('div');
+        drawbar_position[i][j].className = 'drawbar_position';
+        let span = document.createElement('span');
+        span.innerText = j;
+        drawbar_position[i][j].appendChild(span);
+        drawbar[i].appendChild(drawbar_position[i][j]);
+      }
+      let line = document.createElement('div');
+      line.className = 'drawbar_line';
+      drawbar[i].appendChild(line);
+    }
+  })();
+
+  
+
+
+
+
+
 
   let voice_power_on = [false, false, false];
   let voice_changed = [true, true, true];
