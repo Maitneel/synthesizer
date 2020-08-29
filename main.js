@@ -516,25 +516,79 @@
   // ------ Organ Section ------
   // ---------------------------
 
+  function change_balance(bar_index, balance) {
+    for (let i = 1; i < drawbar_position[bar_index].length; i++) {
+      if (i <= balance) {
+        drawbar_position_status[bar_index][i] = true;
+      } else {
+        drawbar_position_status[bar_index][i] = false;
+      }
+    }
+    if (balance == 0) {
+      drawbar_position_status[bar_index][0] = true;
+    } else {
+      drawbar_position_status[bar_index][0] = false;
+    }
+    for (let i = 0; i < drawbar_position[bar_index].length; i++) {
+      drawbar_position[bar_index][i].classList.remove('drawbar_on');
+      drawbar_position[bar_index][i].classList.remove('drawbar_off');
+      if (drawbar_position_status[bar_index][i]) {
+        drawbar_position[bar_index][i].classList.add('drawbar_on');
+      } else {
+        drawbar_position[bar_index][i].classList.add('drawbar_off');
+      }
+    }
+  }
+
   let drawbar = [];
+  let drawbar_overtone = [];
+  let drawbar_overtone_class = [];
+  let drawbar_overtone_feet = ['16\'', '5 1/3\'', '8\'', '4\'', '2 2/3\'', '2\'', '1 3/5\'', '1 1/3\'', '1\''];
   let drawbar_position = [];
+  let drawbar_position_status = []; // on の場合 true, off の場合 false
   (function () {
     for (let i = 0; i < 9; i++) {
       drawbar[i] = document.createElement('div');
       drawbar[i].className = 'drawbar';
       organ_control.appendChild(drawbar[i]);
+      drawbar_overtone[i] = document.createElement('div');
+      drawbar_overtone[i].className = 'overtone';
+      let feet_span = document.createElement('span');
+      feet_span.className = 'feet_text';
+      feet_span.innerText = drawbar_overtone_feet[i];
+      drawbar_overtone[i].appendChild(feet_span);
+      if (drawbar_overtone_feet[i] == '16\'' || drawbar_overtone_feet[i] == '5 1/3\'') {
+        drawbar_overtone[i].classList.add('sixteen_feet');
+      } else if (drawbar_overtone_feet[i].length == 2) {
+        drawbar_overtone[i].classList.add('octave');
+      } else {
+        drawbar_overtone[i].classList.add('not_octave');
+      }
+      drawbar[i].appendChild(drawbar_overtone[i]);
       drawbar_position[i] = [];
+      drawbar_position_status[i] = [];
       for (let j = 0; j < 9; j++) {
         drawbar_position[i][j] = document.createElement('div');
         drawbar_position[i][j].className = 'drawbar_position';
-        let span = document.createElement('span');
-        span.innerText = j;
-        drawbar_position[i][j].appendChild(span);
+        let drawbar_span = document.createElement('span');
+        drawbar_span.innerText = j;
+        drawbar_position[i][j].appendChild(drawbar_span);
+        if (j == 0) {
+          drawbar_position_status[i][j] = true;;
+          drawbar_position[i][j].classList.add('drawbar_on');
+        } else {
+          drawbar_position_status[i][j] = false;
+          drawbar_position[i][j].classList.add('drawbar_off');
+        }
+        drawbar_position[i][j].onclick = () => {
+          change_balance(i, j);
+        }
         drawbar[i].appendChild(drawbar_position[i][j]);
+
       }
-      let line = document.createElement('div');
-      line.className = 'drawbar_line';
-      drawbar[i].appendChild(line);
+      // let line = document.createElement('div');
+      // line.className = 'drawbar_line';
+      // drawbar[i].appendChild(line);
     }
   })();
 
