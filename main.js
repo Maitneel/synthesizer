@@ -47,6 +47,7 @@
   const input_organ_sawtooth_wave_label = document.getElementById('organ_sawtooth_wave_label');
   const input_organ_volume = document.getElementById('organ_volume');
   const drawbar_section = document.getElementById('drawbar_section');
+  const organ_audio_tags = document.getElementById('organ_audio_tags');
 
   const audio_tags_area = [v0_audio_tags_area, v1_audio_tags_area, v2_audio_tags_area];
   const inputs_A4_frequency = [input_v0_A4_frequency, input_v1_A4_frequency, input_v2_A4_frequency];
@@ -526,7 +527,7 @@
   // ------ Organ Section ------
   // ---------------------------
 
-  let blance_list = [];
+  let drawbar_volume = [];
 
   function change_balance(bar_index, balance) {
     for (let i = 1; i < drawbar_position[bar_index].length; i++) {
@@ -550,7 +551,7 @@
         drawbar_position[bar_index][i].classList.add('drawbar_off');
       }
     }
-    blance_list[bar_index] = blance_list / 8;
+    drawbar_volume[bar_index] = drawbar_volume / 8;
   }
 
   let drawbar = [];
@@ -561,6 +562,10 @@
   let drawbar_position_status = []; // on の場合 true, off の場合 false
   let organ_power_on = false;
   let selected_organ_wave_type = 'sin';
+  let organ_voice_changed = true;
+  let organ_wav_files = []; // organ_wav_files[key_list.length][drawbar.length]
+  let organ_audio = [];
+  let organ_wav_files_blob = [];
 
   // organ_section の UI 関係の初期化
   (function () {
@@ -603,15 +608,108 @@
         drawbar[i].appendChild(drawbar_position[i][j]);
 
       }
-      blance_list[i] = 1;
+      drawbar_volume[i] = 1;
       // let line = document.createElement('div');
       // line.className = 'drawbar_line';
       // drawbar[i].appendChild(line);
     }
   })();
 
-  
+  let drawbar_audio_tags = [];
+  (function() {
+    for (let i = 0; i < drawbar.length; i++) {
+      drawbar_audio_tags[i] = document.createElement('div');
+      organ_audio_tags.appendChild(drawbar_audio_tags[i]);
+    }
+  })();
 
+  let organ_frequency_list = []; // organ_frequency[key_list.length][organ_overtone_raito];
+  const organ_overtone_ratio = [1 / 2, (1 / 2) * 3 ,1 , 2, 3, 4, 5, 6, 8];
+  function create_organ_frequency_list(A4_frequency) {
+    for (let i = 0; i < key_list.length; i++) {
+      organ_frequency_list[i] = [];
+    }
+    organ_frequency_list[9][2] = A4_frequency;
+    for (let i = 9; i < key_list.length; i++) {
+      organ_frequency_list[i][2] = A4_frequency * Math.pow(2, (i - 9) / 12);
+    }
+    for (let i = 0; i < 9; i++) {
+      organ_frequency_list[i][2] = organ_frequency_list[i + 12][2] / 2;
+    }
+    console.log('overtone_frequency.length ' + organ_frequency_list.length)
+    console.log(organ_overtone_ratio.length);
+    for (let i = 0; i < organ_frequency_list.length; i++) {
+      console.log('i = ' + i);
+      for (let j = 0; j < organ_overtone_ratio.length; j++) {
+        organ_frequency_list[i][j] = organ_frequency_list[i][2] * organ_overtone_ratio[j];
+      }
+    }
+  }
+
+  function set_organ_sin_wave() {
+    for (let i = 0; i < organ_frequency_list.length; i++) {
+      organ_wav_files[i] = [];
+      for (let j = 0; j < organ_frequency_list[i].length; j++) {
+        organ_wav_files[i][j] = create_sin_wave(wav_header, organ_frequency_list[i][j],wav_length);
+      }
+    }
+  }
+
+  function set_organ_square_wave() {
+    for (let i = 0; i < organ_frequency_list.length; i++) {
+      organ_wav_files[i] = [];
+      for (let j = 0; j < organ_frequency_list[i].length; j++) {
+        organ_wav_files[i][j] = create_square_wave(wav_header, organ_frequency_list[i][j],wav_length);
+      }
+    }
+  }
+
+  function set_organ_sawtooth_wave() {
+    for (let i = 0; i < organ_frequency_list.length; i++) {
+      organ_wav_files[i] = [];
+      for (let j = 0; j < organ_frequency_list[i].length; j++) {
+        organ_wav_files[i][j] = create_sawtooth_wave(wav_header, organ_frequency_list[i][j],wav_length);
+      }
+    }
+  }
+
+  function create_organ_audio () {
+    organ_audio = []; // organ_audio[][]
+    organ_wav_files_blob = [];
+    for (let i = 0; i < organ_frequency_list.length; i++) {
+      organ_audio[i] = [];
+      organ_wav_files_blob[i] = [];
+      for (let j = 0; j < organ_frequency_list[i].length; j++) {
+        console.log(organ_wav_files[i][j]);
+        organ_wav_files_blob[i][j] = new Blob([organ_wav_files[i][j]], {type: 'audio/wav'});
+        organ_audio[i][j] = document.createElement('audio');
+        organ_audio[i][j].src = URL.createObjectURL(organ_wav_files_blob[i][j]);
+        organ_audio[i][j].loop = true;
+        organ_audio[i][j].volume = drawbar_volume[j] * input_organ_volume.value;
+        drawbar_audio_tags[j].appendChild(organ_audio[i][j]);
+      }
+    }
+  }
+
+
+  function update_organ_audio(selected_organ_wave_type) {
+    create_organ_frequency_list(input_organ_A4_frequency.value);
+    if (selected_organ_wave_type == 'sin') {
+      set_organ_sin_wave();
+    } else if (selected_organ_wave_type == 'square') {
+      set_organ_square_wave();
+    } else if (selected_organ_wave_type == 'sawtooth') {
+      set_organ_sawtooth_wave();
+    } else {
+      console.error('?');
+      console.log(selected_organ_wave_type);
+    }
+    for (let i = 0; i < drawbar_audio_tags.length; i++) {
+      remove_all_children(drawbar_audio_tags[i]);
+    }
+    console.log(organ_wav_files);
+    create_organ_audio();
+  }
   
 
 
@@ -716,21 +814,41 @@
   }
 
   input_organ_A4_frequency.onchange = () => {
-    // TODO
+    create_organ_frequency_list(input_organ_A4_frequency.value);
+    if (organ_power_on == true) {
+      update_organ_audio(selected_organ_wave_type);
+    } else {
+      organ_voice_changed = true;
+    }
   }
 
   input_organ_sin_wave.onclick = () => {
     selected_organ_wave_type = 'sin';
+    if (organ_power_on == true) {
+      update_organ_audio(selected_organ_wave_type);
+    } else {
+      organ_voice_changed = true;
+    }
     organ_power_on ^= 1;
   }
 
   input_organ_square_wave.onclick = () => {
     selected_organ_wave_type = 'square';
+    if (organ_power_on == true) {
+      update_organ_audio(selected_organ_wave_type);
+    } else {
+      organ_voice_changed = true;
+    }
     organ_power_on ^= 1;
   }
 
   input_organ_sawtooth_wave.onclick = () => {
     selected_organ_wave_type = 'sawtooth';
+    if (organ_power_on == true) {
+      update_organ_audio(selected_organ_wave_type);
+    } else {
+      organ_voice_changed = true;
+    }
     organ_power_on ^= 1;
   }
 
@@ -751,6 +869,10 @@
   organ_section.onclick = () => {
     organ_power_on ^= 1;
     if (organ_power_on == true) {
+      if (organ_voice_changed == true) {
+        organ_voice_changed = false;
+        update_organ_audio(selected_organ_wave_type);
+      }
       organ_section.classList.remove('voice_off');
       organ_section.classList.add('voice_on');
     } else {
