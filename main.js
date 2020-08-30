@@ -37,7 +37,7 @@
   const v2_audio_tags_area = document.getElementById('v2_audio_tags');
   const keyborad = document.getElementById('keyboard');
 
-  const organ_control = document.getElementById('organ_section');
+  const drawbat_section = document.getElementById('drawbar_section');
 
   const audio_tags_area = [v0_audio_tags_area, v1_audio_tags_area, v2_audio_tags_area];
   const inputs_A4_frequency = [input_v0_A4_frequency, input_v1_A4_frequency, input_v2_A4_frequency];
@@ -550,7 +550,7 @@
     for (let i = 0; i < 9; i++) {
       drawbar[i] = document.createElement('div');
       drawbar[i].className = 'drawbar';
-      organ_control.appendChild(drawbar[i]);
+      drawbat_section.appendChild(drawbar[i]);
       drawbar_overtone[i] = document.createElement('div');
       drawbar_overtone[i].className = 'overtone';
       let feet_span = document.createElement('span');

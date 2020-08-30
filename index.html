@@ -74,7 +74,27 @@
         <div id="v1_audio_tags"></div>
         <div id="v2_audio_tags"></div>
       </div>
-      <div id="organ_section">
+      <div id="organ_section" class="voice_off">
+        <div id="organ_voice" class="organ_voice_control">
+          <input type="number" id="organ_A4_frequency" class="A4_frequency" value="440">
+          <div>
+            <div id="organ_select_wave_div" class="select_wave_div"> 
+              <input type="radio" name="organ_wave_type" id="organ_sin_wave" value="sin" checked>
+                <label for="organ_sin_wave" id="organ_sin_wave_label">sine wave</label>
+              <br>
+              <input type="radio" name="organ_wave_type" id="organ_square_wave" value="square">
+                <label for="organ_square_wave" id="organ_square_wave_label">square wave</label>
+              <br>
+              <input type="radio" name="organ_wave_type" id="organ_sawtooth_wave" value="sawtooth">
+                <label for="organ_sawtooth_wave" id="organ_sawtooth_wave_label">sawtooth wave</label>
+            </div>
+            <div class="volume_area">
+              <span>volume</span><br>
+              <input type="range" class="voice_volume" id="organ_volume" min="0" max="1" step="any" value="1">
+            </div>
+          </div>
+        </div>
+        <div id="drawbar_section"></div>
       </div>
     </div>
     <div id="keyboard">
