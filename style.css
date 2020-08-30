@@ -4,7 +4,7 @@
   margin-left: auto;
   margin-right: auto;
   background-color: #ffffff;
-  padding: 0.5%;
+  padding: 5px;
   border-style: solid;
   border-color:#000000;
   border-width: 1px;
@@ -12,7 +12,7 @@
 
 #control {
   width: 1396px;
-  height: 60%;
+  height: 480px;
   overflow: hidden;
   background-color: #ffffff;
   position: relative;
@@ -21,34 +21,34 @@
 }
 
 #synth_section {
-  height: 100%;
-  width: 24%;
-  margin-left: 1%;
+  width: 335px;
+  height: 480px;
+  margin-left: 14px;
   overflow: hidden;
   float: left;
 }
 
 .voice_control {
-  height: 25%;
-  width: 93.5%;
-  margin-top: 4.25%;
+  width: 313px;
+  height: 120px;
+  margin-top: 14px;
   border-style: double;
   border-width: 3px;
-  padding: 2.2%;
+  padding: 7px;
 }
 
 .select_wave_div {
-  width: 50%;
+  width: 156.5px;
   float: left;
 }
 
 .volume_area {
-  width: 50%;
+  width: 156.5px;
   float: left;
 }
 
 .voice_volume {
-  width: 90%;
+  width: 140px;
 }
 
 .voice_off {
@@ -61,10 +61,10 @@
 
 #organ_section {
   width: 667px;
-  height: 92.7%;
+  height: 442px;
   float: left;
-  margin-left: 1%;
-  margin-top: 1%;
+  margin-left: 14px;
+  margin-top: 14px;
   border-style: double;
   border-width: 3px;
   border-color: #000000;
@@ -72,13 +72,13 @@
 }
 
 .organ_voice_control {
-  width: 60%;
-  height: 25%;
-  padding: 1%;
+  width: 313px;
+  height: 120px;
+  padding: 7px;
 }
 
 #drawbar_section {
-width: 100%;
+width: 667px;
 height: 323px;
   background-color: #fff;
   border-style: solid;
@@ -125,7 +125,7 @@ height: 323px;
 }
 
 .feet_text {
-  width: 100%;
+  width: 61px;
   text-align: center;
   position: absolute;
   bottom: 0;
@@ -161,7 +161,7 @@ height: 323px;
 
 #keyboard {
   width: 1396px;
-  height: 40%;
+  height: 320px;
   background: #000000;
   margin-left: auto;
   margin-right: auto;
