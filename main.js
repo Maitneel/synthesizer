@@ -37,6 +37,15 @@
   const v2_audio_tags_area = document.getElementById('v2_audio_tags');
   const keyborad = document.getElementById('keyboard');
 
+  const organ_section = document.getElementById('organ_section');
+  const input_organ_A4_frequency = document.getElementById('organ_A4_frequency');
+  const input_organ_sin_wave = document.getElementById('organ_sin_wave');
+  const input_organ_sin_wave_label = document.getElementById('organ_sin_wave_label');
+  const input_organ_square_wave = document.getElementById('organ_square_wave');
+  const input_organ_square_wave_label = document.getElementById('organ_square_wave_label');
+  const input_organ_sawtooth_wave = document.getElementById('organ_sawtooth_wave');
+  const input_organ_sawtooth_wave_label = document.getElementById('organ_sawtooth_wave_label');
+  const input_organ_volume = document.getElementById('organ_volume');
   const drawbat_section = document.getElementById('drawbar_section');
 
   const audio_tags_area = [v0_audio_tags_area, v1_audio_tags_area, v2_audio_tags_area];
@@ -50,6 +59,7 @@
   const v2_label = [input_v2_sin_wave_label, input_v2_square_wave_label, input_v2_sawtooth_wave_label];
   const labels = [v0_label, v1_label, v2_label];
   const input_volume = [input_v0_volume, input_v1_volume, input_v2_volume];
+  const organ_labels = [input_organ_sin_wave_label, input_organ_square_wave_label, input_organ_sawtooth_wave_label];
 
 
 
@@ -516,6 +526,8 @@
   // ------ Organ Section ------
   // ---------------------------
 
+  let blance_list = [];
+
   function change_balance(bar_index, balance) {
     for (let i = 1; i < drawbar_position[bar_index].length; i++) {
       if (i <= balance) {
@@ -538,6 +550,7 @@
         drawbar_position[bar_index][i].classList.add('drawbar_off');
       }
     }
+    blance_list[bar_index] = blance_list / 8;
   }
 
   let drawbar = [];
@@ -546,6 +559,10 @@
   let drawbar_overtone_feet = ['16\'', '5 1/3\'', '8\'', '4\'', '2 2/3\'', '2\'', '1 3/5\'', '1 1/3\'', '1\''];
   let drawbar_position = [];
   let drawbar_position_status = []; // on の場合 true, off の場合 false
+  let organ_power_on = false;
+  let selected_organ_wave_type = 'sin';
+
+  // organ_section の UI 関係の初期化
   (function () {
     for (let i = 0; i < 9; i++) {
       drawbar[i] = document.createElement('div');
@@ -586,11 +603,14 @@
         drawbar[i].appendChild(drawbar_position[i][j]);
 
       }
+      blance_list[i] = 1;
       // let line = document.createElement('div');
       // line.className = 'drawbar_line';
       // drawbar[i].appendChild(line);
     }
   })();
+
+  
 
   
 
@@ -688,6 +708,54 @@
   for (let i = 0; i < input_volume.length; i++) {
     input_volume[i].onclick = () => {
       voice_power_on[i] ^= 1;
+    }
+  }
+
+  input_organ_A4_frequency.onclick = () => {
+    organ_power_on ^= 1;
+  }
+
+  input_organ_A4_frequency.onchange = () => {
+    // TODO
+  }
+
+  input_organ_sin_wave.onclick = () => {
+    selected_organ_wave_type = 'sin';
+    organ_power_on ^= 1;
+  }
+
+  input_organ_square_wave.onclick = () => {
+    selected_organ_wave_type = 'square';
+    organ_power_on ^= 1;
+  }
+
+  input_organ_sawtooth_wave.onclick = () => {
+    selected_organ_wave_type = 'sawtooth';
+    organ_power_on ^= 1;
+  }
+
+  for (let i = 0; i < organ_labels.length; i++) {
+    organ_labels[i].onclick = () => {
+      organ_power_on ^= 1;
+    }
+  }
+
+  input_organ_volume.onclick = () => {
+    organ_power_on ^= 1;
+  }
+
+  drawbat_section.onclick = () => {
+    organ_power_on ^= 1;
+  }
+
+  organ_section.onclick = () => {
+    organ_power_on ^= 1;
+    if (organ_power_on == true) {
+      organ_section.classList.remove('voice_off');
+      organ_section.classList.add('voice_on');
+    } else {
+      organ_section.classList.remove('voice_on');
+      organ_section.classList.add('voice_off');
     }
   }
 
