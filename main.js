@@ -46,7 +46,7 @@
   const input_organ_sawtooth_wave = document.getElementById('organ_sawtooth_wave');
   const input_organ_sawtooth_wave_label = document.getElementById('organ_sawtooth_wave_label');
   const input_organ_volume = document.getElementById('organ_volume');
-  const drawbat_section = document.getElementById('drawbar_section');
+  const drawbar_section = document.getElementById('drawbar_section');
 
   const audio_tags_area = [v0_audio_tags_area, v1_audio_tags_area, v2_audio_tags_area];
   const inputs_A4_frequency = [input_v0_A4_frequency, input_v1_A4_frequency, input_v2_A4_frequency];
@@ -567,7 +567,7 @@
     for (let i = 0; i < 9; i++) {
       drawbar[i] = document.createElement('div');
       drawbar[i].className = 'drawbar';
-      drawbat_section.appendChild(drawbar[i]);
+      drawbar_section.appendChild(drawbar[i]);
       drawbar_overtone[i] = document.createElement('div');
       drawbar_overtone[i].className = 'overtone';
       let feet_span = document.createElement('span');
@@ -744,7 +744,7 @@
     organ_power_on ^= 1;
   }
 
-  drawbat_section.onclick = () => {
+  drawbar_section.onclick = () => {
     organ_power_on ^= 1;
   }
 
