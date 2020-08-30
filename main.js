@@ -488,6 +488,11 @@
         audio[i][n].play();
       }
     }
+    if (organ_power_on == true) {
+      for (let i = 0; i < organ_audio[n].length; i++) {
+        organ_audio[n][i].play();
+      }
+    }
     console.log('time: ' +( start - new Date().getTime()));
     if (((n % 12) < 5 && (n % 12) % 2 == 0) || ((5 <= (n % 12)) && (n % 12) % 2 == 1)) {
       key_list[n].classList.remove('not_pressed_whitekey');
@@ -509,6 +514,13 @@
       if (voice_power_on[i] == true) {
         audio[i][n].pause();
         audio[i][n].currentTime = 0;
+      }
+    }
+    if (organ_power_on == true) {
+      console.log('n = ' + n + ' organ_audio.length = ' + organ_audio.length)
+      for (let i = 0; i < organ_audio[n].length; i++) {
+        organ_audio[n][i].pause();
+        organ_audio[n][i].currentTime = 0;
       }
     }
     console.log(n + ' ' + (n % 12) + ' ' + (((n % 12) < 5 && (n % 12) % 2 == 0) || ((5 <= (n % 12)) && (n % 12) % 2 == 1)))
@@ -552,6 +564,9 @@
       }
     }
     drawbar_volume[bar_index] = drawbar_volume / 8;
+    for (let i = 0; i < organ_audio_tags.length; i++) {
+      organ_audio_tags[i][bar_index].volume = input_organ_volume.value * drawbar_volume[bar_index];
+    }
   }
 
   let drawbar = [];
