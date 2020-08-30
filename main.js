@@ -563,9 +563,10 @@
         drawbar_position[bar_index][i].classList.add('drawbar_off');
       }
     }
-    drawbar_volume[bar_index] = drawbar_volume / 8;
-    for (let i = 0; i < organ_audio_tags.length; i++) {
-      organ_audio_tags[i][bar_index].volume = input_organ_volume.value * drawbar_volume[bar_index];
+    drawbar_volume[bar_index] = balance / 8;
+    for (let i = 0; i < organ_audio.length; i++) {
+      organ_audio[i][bar_index].volume = input_organ_volume.value * drawbar_volume[bar_index];
+      console.log('[' + i + '][' + bar_index + '].volume = ' + input_organ_volume.value * drawbar_volume[bar_index])
     }
   }
 
@@ -623,7 +624,7 @@
         drawbar[i].appendChild(drawbar_position[i][j]);
 
       }
-      drawbar_volume[i] = 1;
+      drawbar_volume[i] = 0;
       // let line = document.createElement('div');
       // line.className = 'drawbar_line';
       // drawbar[i].appendChild(line);
