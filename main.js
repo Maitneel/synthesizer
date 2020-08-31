@@ -49,6 +49,8 @@
   const drawbar_section = document.getElementById('drawbar_section');
   const organ_audio_tags = document.getElementById('organ_audio_tags');
 
+  const div_key_setting = document.getElementById('key_setting');
+
   const audio_tags_area = [v0_audio_tags_area, v1_audio_tags_area, v2_audio_tags_area];
   const inputs_A4_frequency = [input_v0_A4_frequency, input_v1_A4_frequency, input_v2_A4_frequency];
   const inputs_sin_wave = [input_v0_sin_wave, input_v1_sin_wave, input_v2_sin_wave];
@@ -97,6 +99,7 @@
   })();
 
   let key_list = [];
+  let key_list_span = [];
   (function () {
     let whitekey_index = 0;
     let blackkey_index = 0;
@@ -110,14 +113,29 @@
     }
     for (let i = 0; i < key_list.length; i++) {
       key_list[i].onmousedown = () => {
-        audio_play(i);
+        if (now_setting == true) {
+          key_number = i;
+        } else {
+          audio_play(i);
+        }
       }
       key_list[i].onmouseup = () => {
-        audio_stop(i);
+        if (now_setting == true) {
+
+        } else {
+          audio_stop(i);
+        }
       }
       key_list[i].onmouseout = () => {
-        audio_stop(i);
+        if (now_setting == true) {
+
+        } else {
+          audio_stop(i);
+        }
       }
+      key_list_span[i] = document.createElement('span');
+      key_list_span[i].className = 'key_span';
+      key_list[i].appendChild(key_list_span[i]);
     }
   })();
 
@@ -894,6 +912,51 @@
     } else {
       organ_section.classList.remove('voice_on');
       organ_section.classList.add('voice_off');
+    }
+  }
+
+  let now_setting = false;
+  let key_number = -1;
+  let key_list_of_play_audio = [];
+  let key_list_of_assigned = [-1];
+  let using_key_list = [];
+  div_key_setting.onclick = () => {
+    key_number = -1;
+    now_setting ^= 1;
+    console.log(key_list_of_play_audio);
+  }
+
+  document.onkeydown = (event) => {
+    if (now_setting == true) {
+      if (event.key == 'Escape') {
+        div_key_setting.onclick();
+      } else if (event.key == 'Backspace') {
+        key_list_of_play_audio[key_list_of_assigned[key_number]] = -1;
+        key_list_of_assigned[key_number] = -1;
+        key_list_span[key_number].innerText = '';
+      } else {
+        for (let i = 0; i < key_list_of_assigned.length; i++) {
+          if (key_list_of_assigned[i] == event.keyCode && i != key_number) {
+            alert('同じ文字を違う音に割り振ることはできません。');
+            break;
+          }
+          if (i == key_list_of_assigned.length - 1) {
+            key_list_of_play_audio[event.keyCode] = key_number;
+            key_list_of_assigned[key_number] = event.keyCode;
+            key_list_span[key_number].innerText = event.key;
+          }
+        }
+      }
+    } else {
+      if (key_list_of_play_audio[event.keyCode] != -1) {
+        key_list[key_list_of_play_audio[event.keyCode]].onmousedown();
+      }
+    }
+  }
+
+  document.onkeyup = (event) => {
+    if (now_setting != true) {
+      key_list[key_list_of_play_audio[event.keyCode]].onmouseup();
     }
   }
 
