@@ -37,6 +37,14 @@
   padding: 7px;
 }
 
+.A4_frequency {
+  width: 85px;
+}
+
+.A4_frequency_span {
+  font-size: 15px;
+}
+
 .select_wave_div {
   width: 156.5px;
   float: left;
