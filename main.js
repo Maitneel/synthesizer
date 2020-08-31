@@ -413,7 +413,7 @@
   };
 
   let wav_files = [];
-  let wav_length = 0.5;
+  let wav_length = 2;
   // frequency_list の周波数を元にサイン波を作成し，それを配列に保存する
   function set_sin_wave(voice) {
     wav_files[voice] = [];
@@ -438,14 +438,27 @@
 
   // create audio tags
   let audio = [];
+  let audio_length = [];
   let wav_files_blob = [];
   function create_audio (voice) {
     audio[voice] = [];
+    // audio_length[voice] []
     wav_files_blob[voice] = [];
     for (let i = 0; i < key_list.length; i++) {
       wav_files_blob[voice][i] = new Blob([wav_files[voice][i]], {type: 'audio/wav'});
       audio[voice][i] = document.createElement('audio');
       audio[voice][i].src = URL.createObjectURL(wav_files_blob[voice][i]);
+      // audio_length[voice][i] = tweak_length()
+
+      // audio[voice][i].addEventListener('ended', (event) => {
+      //   let stop = new Date().getTime();
+      //   audio[voice][i].currentTime = 0;
+      //   audio[voice][i].play()
+      //   console.log(new Date().getTime() - stop);
+      // });
+
+      
+
       audio[voice][i].loop = true;
       audio[voice][i].volume = input_volume[voice].value;
       audio_tags_area[voice].appendChild(audio[voice][i]);
@@ -496,19 +509,41 @@
 
   console.log(wav_files[0]);
 
-
+  function reload(n) {
+    console.log('reload flag' + is_keydowning);
+    if (is_mousedowning == true) {
+      audio_play(n);
+    }
+  }
+  let interval_id = undefined;
+  let is_mousedowning = false;
   // キーを押した時，音を鳴らす処理
   function audio_play(n) {
+    console.log('audio_play');
+    is_mousedowning = true;
     console.log('onmousedown, pushed by ' + n);
     let start = new Date().getTime();
     for (let i = 0; i < audio.length; i++) {
+      
       if (voice_power_on[i] == true) {
+        if (audio[i][n].currentTime > wav_length * 0.95) {
+          audio[i][n].currentTime = 0;
+        }
         audio[i][n].play();
       }
     }
     if (organ_power_on == true) {
       for (let i = 0; i < organ_audio[n].length; i++) {
+        if (organ_audio[n][i].currentTime > wav_length * 0.95) {
+          organ_audio[n][i].currentTime %= 1.75;
+        }
         organ_audio[n][i].play();
+      }
+    }
+    console.log('flag iskey ' + is_keydowning)
+    if (is_keydowning != true) {
+      if (interval_id == undefined) {
+        // interval_id = setInterval(reload(n), length * 0.9 * 1000);
       }
     }
     console.log('time: ' +( start - new Date().getTime()));
@@ -527,6 +562,9 @@
 
   // キーを離した時，音を止める処理
   function audio_stop(n) {
+    is_mousedowning = false;
+    clearInterval(interval_id);
+    interval_id = undefined;
     console.log('mouseout or onmouseup. by ' + n);
     for (let i = 0; i < audio.length; i++) {
       if (voice_power_on[i] == true) {
@@ -926,7 +964,10 @@
     console.log(key_list_of_play_audio);
   }
 
+  let is_keydowning = false;
+
   document.onkeydown = (event) => {
+    is_keydowning = true;
     if (now_setting == true) {
       if (event.key == 'Escape') {
         div_key_setting.onclick();
@@ -955,6 +996,7 @@
   }
 
   document.onkeyup = (event) => {
+    is_keydowning = false;
     if (now_setting != true) {
       key_list[key_list_of_play_audio[event.keyCode]].onmouseup();
     }
