@@ -827,11 +827,13 @@
 
   
   let is_config_changed = false;
+  let was_onclick_memory = false;
   let change_memory_number = -1
 
   // 変更するメモリされた時に上の関数を呼び出してメモリの入れ替えを行う
   for (let i = 0; i < memory.length; i++) {
     memory[i].onclick = () => {
+      was_onclick_memory = true;
       is_config_changed = true;
       change_memory_number = i;
       set_memory_data();
@@ -842,32 +844,46 @@
 
   // 元の設定に戻す
   cancel.onclick = () => {
-    is_config_changed = false;
-    change_memory_number = -1
-    change_config(memory_data[0]);
+    if (was_onclick_memory == true) {
+      was_onclick_memory = false;
+      is_config_changed = false;
+      change_memory_number = -1
+      change_config(memory_data[0]);
+    }
   }
 
   // 変更を確定させる
   // check より change のほうがいい気がする
   check.onclick = () => {
-    if (confirm('現在の設定とmemory' + (change_memory_number + 1) + 'を入れ替えますか？')) {
-      memory_data[change_memory_number + 1].voice0.A4_frequency = memory_data[0].voice0.A4_frequency
-      memory_data[change_memory_number + 1].voice0.wave_type = memory_data[0].voice0.wave_type
-      memory_data[change_memory_number + 1].voice0.volume = memory_data[0].voice0.volume
-      memory_data[change_memory_number + 1].voice1.A4_frequency = memory_data[0].voice1.A4_frequency
-      memory_data[change_memory_number + 1].voice1.wave_type = memory_data[0].voice1.wave_type
-      memory_data[change_memory_number + 1].voice1.volume = memory_data[0].voice1.volume
-      memory_data[change_memory_number + 1].voice2.A4_frequency = memory_data[0].voice2.A4_frequency
-      memory_data[change_memory_number + 1].voice2.wave_type = memory_data[0].voice2.wave_type
-      memory_data[change_memory_number + 1].voice2.volume = memory_data[0].voice2.volume
-      memory_data[change_memory_number + 1].organ.A4_frequency = memory_data[0].organ.A4_frequency
-      memory_data[change_memory_number + 1].organ.wave_type = memory_data[0].organ.wave_type
-      memory_data[change_memory_number + 1].organ.volume = memory_data[0].organ.volume
-      for (let i = 0; i < memory_data[0].drawbar.length; i++) {
-        memory_data[change_memory_number + 1].drawbar[i] = memory_data[0].drawbar[i];
+    if (change_memory_number != -1) {
+      if (confirm('現在の設定とmemory' + (change_memory_number + 1) + 'を入れ替えますか？')) {
+        memory_data[change_memory_number + 1].voice0.A4_frequency = memory_data[0].voice0.A4_frequency
+        memory_data[change_memory_number + 1].voice0.wave_type = memory_data[0].voice0.wave_type
+        memory_data[change_memory_number + 1].voice0.volume = memory_data[0].voice0.volume
+        memory_data[change_memory_number + 1].voice1.A4_frequency = memory_data[0].voice1.A4_frequency
+        memory_data[change_memory_number + 1].voice1.wave_type = memory_data[0].voice1.wave_type
+        memory_data[change_memory_number + 1].voice1.volume = memory_data[0].voice1.volume
+        memory_data[change_memory_number + 1].voice2.A4_frequency = memory_data[0].voice2.A4_frequency
+        memory_data[change_memory_number + 1].voice2.wave_type = memory_data[0].voice2.wave_type
+        memory_data[change_memory_number + 1].voice2.volume = memory_data[0].voice2.volume
+        memory_data[change_memory_number + 1].organ.A4_frequency = memory_data[0].organ.A4_frequency
+        memory_data[change_memory_number + 1].organ.wave_type = memory_data[0].organ.wave_type
+        memory_data[change_memory_number + 1].organ.volume = memory_data[0].organ.volume
+        for (let i = 0; i < memory_data[0].drawbar.length; i++) {
+          memory_data[change_memory_number + 1].drawbar[i] = memory_data[0].drawbar[i];
+        }
+        set_memory_data();
+        voice_power_on = [true, true, true];
+        for (let i = 0; i < div_voice.length; i++) {
+          div_voice[i].onclick();
+        }
+        organ_power_on = true;
+        organ_section.onclick();
+        voice_changed = [true, true, true];
+        organ_voice_changed = true;
+        was_onclick_memory = false;
+        change_memory_number = -1;
       }
-      voice_power_on = [false, false, false];
-      voice_changed = [true, true, true];
     }
   }
 
