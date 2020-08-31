@@ -189,12 +189,12 @@ height: 323px;
 }
 
 #key_setting {
-  width: 320px;
-  height: 83px;
+  width: 300px;
+  height: 73px;
   margin-top: 14px;
   border-style: double;
   border-width: 3px;
-
+  padding: 5px 10px 5px;
 
 }
 

@@ -958,9 +958,19 @@
   let key_list_of_play_audio = [];
   let key_list_of_assigned = [-1];
   let using_key_list = [];
+  let key_setting_span = document.createElement('span');
+  let key_setting_span_innerText = ['ここをクリックするとキーの割り当てを開始します', 'ここをクリックするとキーの割り当てを終了します\nescで終了  backspaceで割り当てを削除'];
+  key_setting_span.innerText = key_setting_span_innerText[0];
+  // key_setting_span.style.fontSize = '15px';
+  div_key_setting.appendChild(key_setting_span);
   div_key_setting.onclick = () => {
     key_number = -1;
     now_setting ^= 1;
+    if (now_setting == true) {
+      key_setting_span.innerText = key_setting_span_innerText[1];
+    } else {
+      key_setting_span.innerText = key_setting_span_innerText[0];
+    }
     console.log(key_list_of_play_audio);
   }
 
