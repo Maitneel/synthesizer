@@ -108,6 +108,7 @@
 
   let key_list = [];
   let key_list_span = [];
+  // 白鍵と黒鍵を1つの配列にまとめて，鍵盤を押した時の挙動を定義する
   (function () {
     let whitekey_index = 0;
     let blackkey_index = 0;
@@ -128,16 +129,12 @@
         }
       }
       key_list[i].onmouseup = () => {
-        if (now_setting == true) {
-
-        } else {
+        if (now_setting != true) {
           audio_stop(i);
         }
       }
       key_list[i].onmouseout = () => {
-        if (now_setting == true) {
-
-        } else {
+        if (now_setting != true) {
           audio_stop(i);
         }
       }
@@ -172,6 +169,7 @@
   };
   wav_header.set();
 
+  // ↓の create_per0x100_array の代わりに使おうと思っていた関数(このソースの中で使用はしない)
   function int_to_string(n, byte) {
     let string = "";
     for (let i = 0; i < byte; i++) {
@@ -194,7 +192,8 @@
     return result;
   }
 
-  // wav ファイルの長さを調節する関数
+  // wav ファイルの長さを調節する関数　
+  // 波形のできるだけ周期ごとに近いところにしておくと，audio の loop で回した時にきれいに聞こえる(FireFox)
   function tweak_length(frequency, sampling_fre, length) {
     return (sampling_fre / frequency * Math.max(Math.floor(frequency * length) , 2) / sampling_fre);
   }
@@ -358,6 +357,7 @@
   }
 
   /*
+  // とりあえずあとでやろうと思ってコメントアウトしたけど結局できなかった...
   // 矩形波，のこぎり波をフーリエ級数で計算したかったが(倍音が多すぎることになるので)，なぜかうまくいかないのでとりあえず1回放置する
   let sawtooth = [];
   function clac_sawtooth(sampling_fre, max_x) {
@@ -401,12 +401,16 @@
   }
 
 
+  // なぜか使っていないのに定義されてる周波数たち
   let v0_A4_frequency = input_v0_A4_frequency.value;
   let v1_A4_frequency = input_v1_A4_frequency.value;
   let v2_A4_frequency = input_v2_A4_frequency.value;
 
+  // A4 というのは，音の高さのことで，中央のC音(Do)の上のA音(La)のことである
+  // このプログラムでは，htmlを表示した時，1番下にあるA音がA4である。
   let A4_frequency = [input_v0_A4_frequency.value, input_v1_A4_frequency.value, input_v2_A4_frequency.value];
 
+  // 平均律によるそれぞれの音の周波数のリスト
   let frequency_list = [];
   // calc frequency and create frequency list
   function create_frequency_list(A4_frequency, voice) {
@@ -430,6 +434,7 @@
     }
   };
 
+  // set_sin_wave の矩形波版
   function set_square_wave(voice) {
     wav_files[voice] = [];
     for (let i = 0; i < frequency_list[voice].length; i++) {
@@ -437,6 +442,7 @@
     }
   }
 
+  // set_sin_wave ののこぎり波版
   function set_sawtooth_wave(voice) {
     wav_files[voice] = [];
     for (let i = 0; i < frequency_list[voice].length; i++) {
@@ -501,6 +507,7 @@
 
   // 初期化
   (function () {
+    // 開発当初の名残
     /*
     create_frequency_list(v0_A4_frequency, 0);
     set_sin_wave(0);
@@ -517,6 +524,7 @@
 
   console.log(wav_files[0]);
 
+  // chrome audio.loop がうまくいかない問題を解決使用とした関数。うまくいかなかったので使ってない
   function reload(n) {
     console.log('reload flag' + is_keydowning);
     if (is_mousedowning == true) {
@@ -603,8 +611,12 @@
   // ------ Organ Section ------
   // ---------------------------
 
+  // 基本的に上のシンセと同じようなことをしているが，ドローバーのを実装する関係で別関数，別変数になった
+  // (思いつきで機能を足していったのでオルガン版の変数，関数名は今までの定義したのと似たような名前で organ とだいたいがついている)
+
   let drawbar_volume = [];
 
+  // ドローバーが変更された時に音のvolumeを変更する
   function change_balance(bar_index, balance) {
     for (let i = 1; i < drawbar_position[bar_index].length; i++) {
       if (i <= balance) {
@@ -634,20 +646,26 @@
     }
   }
 
+  // ドローバーのhtmlを作るのに使う
   let drawbar = [];
   let drawbar_overtone = [];
   let drawbar_overtone_class = [];
   let drawbar_overtone_feet = ['16\'', '5 1/3\'', '8\'', '4\'', '2 2/3\'', '2\'', '1 3/5\'', '1 1/3\'', '1\''];
   let drawbar_position = [];
   let drawbar_position_status = []; // on の場合 true, off の場合 false
+
+  // 音の設定関係
   let organ_power_on = false;
   let selected_organ_wave_type = 'sin';
   let organ_voice_changed = true;
+
+  // wav ファイル関係
   let organ_wav_files = []; // organ_wav_files[key_list.length][drawbar.length]
   let organ_audio = [];
   let organ_wav_files_blob = [];
 
   // organ_section の UI 関係の初期化
+  // ドローバーのhtmlを作る
   (function () {
     for (let i = 0; i < 9; i++) {
       drawbar[i] = document.createElement('div');
@@ -695,6 +713,7 @@
     }
   })();
 
+  // 上の方で定義した audio_tags のオルガン版
   let drawbar_audio_tags = [];
   (function() {
     for (let i = 0; i < drawbar.length; i++) {
@@ -703,8 +722,12 @@
     }
   })();
 
+  // 周波数リスト
+  // ドローバー関係の倍音が入るので2次元配列になる
   let organ_frequency_list = []; // organ_frequency[key_list.length][organ_overtone_raito];
   const organ_overtone_ratio = [1 / 2, (1 / 2) * 3 ,1 , 2, 3, 4, 5, 6, 8];
+
+  // organ_freqency_list の作成
   function create_organ_frequency_list(A4_frequency) {
     for (let i = 0; i < key_list.length; i++) {
       organ_frequency_list[i] = [];
@@ -726,6 +749,7 @@
     }
   }
 
+  // サイン波を organ_wav_file にセットする(set_sin_wave のオルガン版)
   function set_organ_sin_wave() {
     for (let i = 0; i < organ_frequency_list.length; i++) {
       organ_wav_files[i] = [];
@@ -735,6 +759,7 @@
     }
   }
 
+  // 矩形波を organ_wav_file にセットする(set_square_wave のオルガン版)
   function set_organ_square_wave() {
     for (let i = 0; i < organ_frequency_list.length; i++) {
       organ_wav_files[i] = [];
@@ -744,6 +769,7 @@
     }
   }
 
+  // のこぎり波を organ_wav_file にセットする(set_sawtooth_wave のオルガン版)
   function set_organ_sawtooth_wave() {
     for (let i = 0; i < organ_frequency_list.length; i++) {
       organ_wav_files[i] = [];
@@ -753,6 +779,9 @@
     }
   }
 
+  
+  // create_audio のオルガン版
+  // 倍音を実装するのでcreate_audioより9倍遅い
   function create_organ_audio () {
     organ_audio = []; // organ_audio[][]
     organ_wav_files_blob = [];
@@ -772,6 +801,7 @@
   }
 
 
+  // 周波数，波形のどちらかが変更された場合に呼び出され更新する
   function update_organ_audio(selected_organ_wave_type) {
     create_organ_frequency_list(input_organ_A4_frequency.value);
     if (selected_organ_wave_type == 'sin') {
@@ -795,6 +825,8 @@
   // -----------------------------
   // ------ memory section -------
   // -----------------------------
+
+  // シンセ，オルガンの設定を保存する
 
   let memory_data = [];
   // memory_data[0] に現在の，その他にそれぞれのmemory[n]を入れる
@@ -825,6 +857,7 @@
    }
   }
 
+  // memory_data に現在の設定を保存する
   function set_memory_data() {
     memory_data[0].voice0.A4_frequency = inputs_A4_frequency[0].value;
     memory_data[0].voice0.wave_type = selected_wave_type[0];
@@ -843,6 +876,7 @@
     }
   }
 
+  // memory_data から設定を書き換える(この時点で設定は変わらない)
   function change_config(memory_data) {
     inputs_A4_frequency[0].value = memory_data.voice0.A4_frequency;
     console.log('foo flag' + inputs_A4_frequency[0].value + ' ' + memory_data.voice0.A4_frequency);
@@ -885,8 +919,11 @@
     }
   }
 
+  
   let is_config_changed = false;
   let change_memory_number = -1
+
+  // 変更するメモリされた時に上の関数を呼び出してメモリの入れ替えを行う
   for (let i = 0; i < memory.length; i++) {
     memory[i].onclick = () => {
       is_config_changed = true;
@@ -898,6 +935,7 @@
   }
 
 
+  // 元の設定に戻す
   cancel.onclick = () => {
     is_config_changed = false;
     change_memory_number = -1
@@ -905,6 +943,8 @@
     change_config(memory_data[0]);
   }
 
+  // 変更を確定させる
+  // check より change のほうがいい気がする
   check.onclick = () => {
     if (confirm('現在の設定とmemory' + (change_memory_number + 1) + 'を入れ替えますか？')) {
       memory_data[change_memory_number + 1].voice0.A4_frequency = memory_data[0].voice0.A4_frequency
@@ -927,6 +967,7 @@
     }
   }
 
+  // メモリが選択されている時に他のところをクリックした場合，選択をキャンセルする
   let onclick_in_memory_section = false
   memory_section.onclick = () => {
     onclick_in_memory_section = true;
@@ -944,6 +985,7 @@
     console.log('click document')
   }
 
+  // TODO cookie にメモリを保存しようと思ってつくった関数。そのうちcookieに保存できるようにして再読み込み，ブラウザを閉じても復元できるようにする
   function create_memory_cookie(memory_data, memory_number) {
     let result = 'memory' + memory_number + '=';
 
@@ -966,16 +1008,19 @@
     return result;
   }
 
+  // cookie を読んでメモリーに保存する関数
   function read_memory_cookie(cookie_string) {
-
+    // TODO
   } 
 
 
 
 
 
-
+  // それぞれのボイス(シンセ)がオンかオフかの配列
   let voice_power_on = [false, false, false];
+  // ボイスがオフの間に変更されていた場合wavファイルを作り直すために変更されたかを保持する配列
+  // 初期はページを読み込んだタイミングではwavファイルは作成されないので全てtrue
   let voice_changed = [true, true, true];
 
 
@@ -983,6 +1028,9 @@
   // ------------------------------------
   // ↓ .onclick, .onchange などの処理指定
   // ------------------------------------
+
+  // 周波数，波形等の変化があった時に変更するための処理
+
   for (let i = 0; i < inputs_A4_frequency.length; i++) {
     inputs_A4_frequency[i].onchange = () => {
       A4_frequency[i] = inputs_A4_frequency[i].value;
@@ -1138,6 +1186,13 @@
       organ_section.classList.add('voice_off');
     }
   }
+
+  // ------------------------
+  // ----- キーの割り当て -----
+  // ------------------------
+
+  // キーの割り当てをするための処理群
+  // 雑な処理をしてるので，関係ないタイミングでエラーが出る
 
   let now_setting = false;
   let key_number = -1;
