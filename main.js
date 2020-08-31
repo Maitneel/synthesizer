@@ -959,7 +959,7 @@
   let key_list_of_assigned = [-1];
   let using_key_list = [];
   let key_setting_span = document.createElement('span');
-  let key_setting_span_innerText = ['ここをクリックするとキーの割り当てを開始します', 'ここをクリックするとキーの割り当てを終了します\nescで終了  backspaceで割り当てを削除'];
+  let key_setting_span_innerText = ['ここをクリックするとキーの割り当てを開始します', 'ここをクリックするとキーの割り当てを終了します\nキーを割り振りたい音を選択して割り振りたいキーを押すと登録できます。\nesc, backspaceは割り振れません\nescで終了\n削除したい音を選択してbackspaceを\n押すと割り当てを削除'];
   key_setting_span.innerText = key_setting_span_innerText[0];
   // key_setting_span.style.fontSize = '15px';
   div_key_setting.appendChild(key_setting_span);

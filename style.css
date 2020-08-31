@@ -168,7 +168,7 @@ height: 323px;
 
 #memory_section {
   width: 320px;
-  height: 339px;
+  height: 219px;
   border-style: double;
   border-width: 3px;
 }
@@ -182,7 +182,7 @@ height: 323px;
 
 .memory {
   width: 300px;
-  height: 60px;
+  height: 45px;
   margin-top: 15px;
   margin-left: 10px;
   background-color: red
@@ -190,7 +190,7 @@ height: 323px;
 
 #key_setting {
   width: 300px;
-  height: 73px;
+  height: 193px;
   margin-top: 14px;
   border-style: double;
   border-width: 3px;
