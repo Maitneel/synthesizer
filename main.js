@@ -833,6 +833,10 @@
   // 変更するメモリされた時に上の関数を呼び出してメモリの入れ替えを行う
   for (let i = 0; i < memory.length; i++) {
     memory[i].onclick = () => {
+      for (let j = 0; j < memory.length; j++) {
+        memory[j].classList.remove('choosed_memory');
+      }
+      memory[i].classList.add('choosed_memory');
       was_onclick_memory = true;
       is_config_changed = true;
       change_memory_number = i;
@@ -845,6 +849,9 @@
   // 元の設定に戻す
   cancel.onclick = () => {
     if (was_onclick_memory == true) {
+      for (let i = 0; i < memory.length; i++) {
+        memory[i].classList.remove('choosed_memory');
+      }
       was_onclick_memory = false;
       is_config_changed = false;
       change_memory_number = -1

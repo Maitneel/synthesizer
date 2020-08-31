@@ -198,6 +198,10 @@ height: 323px;
   text-align: center;
 }
 
+.choosed_memory {
+  background-color: #ff9999;
+}
+
 #cancel {
   width: 138px;
   height: 28px;
