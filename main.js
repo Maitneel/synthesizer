@@ -49,6 +49,13 @@
   const drawbar_section = document.getElementById('drawbar_section');
   const organ_audio_tags = document.getElementById('organ_audio_tags');
 
+  const memory_section = document.getElementById('memory_section');
+  const memory0 = document.getElementById('memory0');
+  const memory1 = document.getElementById('memory1');
+  const memory2 = document.getElementById('memory2');
+  const cancel = document.getElementById('cancel');
+  const check = document.getElementById('check');
+
   const div_key_setting = document.getElementById('key_setting');
 
   const audio_tags_area = [v0_audio_tags_area, v1_audio_tags_area, v2_audio_tags_area];
@@ -63,6 +70,7 @@
   const labels = [v0_label, v1_label, v2_label];
   const input_volume = [input_v0_volume, input_v1_volume, input_v2_volume];
   const organ_labels = [input_organ_sin_wave_label, input_organ_square_wave_label, input_organ_sawtooth_wave_label];
+  const memory = [memory0, memory1, memory2]
 
 
 
@@ -783,6 +791,184 @@
     create_organ_audio();
   }
   
+
+  // -----------------------------
+  // ------ memory section -------
+  // -----------------------------
+
+  let memory_data = [];
+  // memory_data[0] に現在の，その他にそれぞれのmemory[n]を入れる
+  
+  for (let i = 0; i < memory.length + 1; i++) {
+    memory_data[i] = {
+     voice0: {
+       A4_frequency: 440,
+         wave_type: 'sin',
+         volume: 1
+       },
+     voice1: {
+       A4_frequency: 440,
+       wave_type: 'sin',
+       volume: 1
+     },
+     voice2: {
+       A4_frequency: 440,
+       wave_type: 'sin',
+       volume: 1
+     },
+     organ: {
+       A4_frequency: 440,
+       wave_type: 'sin',
+       volume: 1
+     },
+     drawbar: [0, 0, 0, 0, 0, 0, 0, 0, 0]
+   }
+  }
+
+  function set_memory_data() {
+    memory_data[0].voice0.A4_frequency = inputs_A4_frequency[0].value;
+    memory_data[0].voice0.wave_type = selected_wave_type[0];
+    memory_data[0].voice0.volume = input_volume[0].value;
+    memory_data[0].voice1.A4_frequency = inputs_A4_frequency[1].value;
+    memory_data[0].voice1.wave_type = selected_wave_type[1];
+    memory_data[0].voice1.volume = input_volume[1].value;
+    memory_data[0].voice2.A4_frequency = inputs_A4_frequency[2].value;
+    memory_data[0].voice2.wave_type = selected_wave_type[2];
+    memory_data[0].voice2.volume = input_volume[2].value;
+    memory_data[0].organ.A4_frequency = input_organ_A4_frequency.value;
+    memory_data[0].organ.wave_type = selected_organ_wave_type;
+    memory_data[0].organ.volume = input_organ_volume.value
+    for (let i = 0; i < drawbar_volume.length; i++) {
+      memory_data[0].drawbar[i] = drawbar_volume[i] * 8;
+    }
+  }
+
+  function change_config(memory_data) {
+    inputs_A4_frequency[0].value = memory_data.voice0.A4_frequency;
+    console.log('foo flag' + inputs_A4_frequency[0].value + ' ' + memory_data.voice0.A4_frequency);
+    selected_wave_type[0] = memory_data.voice0.wave_type;
+    input_volume[0].value = memory_data.voice0.volume;
+    inputs_A4_frequency[1].value = memory_data.voice1.A4_frequency;
+    selected_wave_type[1] = memory_data.voice1.wave_type;
+    input_volume[1].value = memory_data.voice1.volume;
+    inputs_A4_frequency[2].value = memory_data.voice2.A4_frequency;
+    selected_wave_type[2] = memory_data.voice2.wave_type;
+    input_volume[2].value = memory_data.voice2.volume;
+    input_organ_A4_frequency.value = memory_data.organ.A4_frequency;
+    selected_organ_wave_type = memory_data.organ.wave_type;
+    input_organ_volume.value = memory_data.organ.volume;
+
+    for (let i = 0; i < selected_wave_type.length; i++) {
+      if (selected_wave_type[i] == 'sin') {
+        inputs_sin_wave[i].checked = true;
+      } else if (selected_wave_type[i] == 'square') {
+        inputs_square_wave[i].checked = true;
+      } else if (selected_wave_type[i] == 'sawtooth') {
+        inputs_sawtooth_wave[i].checked = true;
+      } else {
+        console.log('?' + i + ' ' + selected_wave_type[i]);
+      }
+    }
+
+    if (selected_organ_wave_type == 'sin') {
+      input_organ_sin_wave.checked = true;
+    } else if (selected_organ_wave_type == 'square') {
+      input_organ_square_wave.checked = true;
+    } else if (selected_organ_wave_type == 'sawtooth') {
+      input_organ_sawtooth_wave.checked = true;
+    } else {
+      console.log('?' + i + ' ' + selected_organ_wave_type);
+    }
+
+    for (let i = 0; i < memory_data.drawbar.length; i++) {
+      drawbar_position[i][memory_data.drawbar[i]].onclick();
+    }
+  }
+
+  let is_config_changed = false;
+  let change_memory_number = -1
+  for (let i = 0; i < memory.length; i++) {
+    memory[i].onclick = () => {
+      is_config_changed = true;
+      change_memory_number = i;
+      set_memory_data();
+      change_config(memory_data[i + 1]);
+      console.log(memory_data[0])
+    }
+  }
+
+
+  cancel.onclick = () => {
+    is_config_changed = false;
+    change_memory_number = -1
+    console.log('hogehoge');
+    change_config(memory_data[0]);
+  }
+
+  check.onclick = () => {
+    if (confirm('現在の設定とmemory' + (change_memory_number + 1) + 'を入れ替えますか？')) {
+      memory_data[change_memory_number + 1].voice0.A4_frequency = memory_data[0].voice0.A4_frequency
+      memory_data[change_memory_number + 1].voice0.wave_type = memory_data[0].voice0.wave_type
+      memory_data[change_memory_number + 1].voice0.volume = memory_data[0].voice0.volume
+      memory_data[change_memory_number + 1].voice1.A4_frequency = memory_data[0].voice1.A4_frequency
+      memory_data[change_memory_number + 1].voice1.wave_type = memory_data[0].voice1.wave_type
+      memory_data[change_memory_number + 1].voice1.volume = memory_data[0].voice1.volume
+      memory_data[change_memory_number + 1].voice2.A4_frequency = memory_data[0].voice2.A4_frequency
+      memory_data[change_memory_number + 1].voice2.wave_type = memory_data[0].voice2.wave_type
+      memory_data[change_memory_number + 1].voice2.volume = memory_data[0].voice2.volume
+      memory_data[change_memory_number + 1].organ.A4_frequency = memory_data[0].organ.A4_frequency
+      memory_data[change_memory_number + 1].organ.wave_type = memory_data[0].organ.wave_type
+      memory_data[change_memory_number + 1].organ.volume = memory_data[0].organ.volume
+      for (let i = 0; i < memory_data[0].drawbar.length; i++) {
+        memory_data[change_memory_number + 1].drawbar[i] = memory_data[0].drawbar[i];
+      }
+      voice_power_on = [false, false, false];
+      voice_changed = [true, true, true];
+    }
+  }
+
+  let onclick_in_memory_section = false
+  memory_section.onclick = () => {
+    onclick_in_memory_section = true;
+    is_config_changed ^= 1;
+  }
+
+  document.body.onclick = () => {
+    if (is_config_changed == true) {
+      cancel.onclick();
+    }
+    if (onclick_in_memory_section == true) {
+      is_config_changed ^= 1;
+      onclick_in_memory_section = false
+    }
+    console.log('click document')
+  }
+
+  function create_memory_cookie(memory_data, memory_number) {
+    let result = 'memory' + memory_number + '=';
+
+    result += memory_data.voice0.A4_frequency + '_';
+    result += memory_data.voice0.wave_type + '_';
+    result += memory_data.voice0.volume + '_';
+    result += memory_data.voice1.A4_frequency + '_';
+    result += memory_data.voice1.wave_type + '_';
+    result += memory_data.voice1.volume + '_';
+    result += memory_data.voice2.A4_frequency + '_';
+    result += memory_data.voice2.wave_type + '_';
+    result += memory_data.voice2.volume + '_';
+    result += memory_data.organ.A4_frequency + '_';
+    result += memory_data.organ.wave_type + '_';
+    result += memory_data.organ.volume + '_';
+    for (let i = 0; i < memory_data.drawbar.length; i++) {
+      result += memory_data.drawbar[i] + '_';
+    }
+
+    return result;
+  }
+
+  function read_memory_cookie(cookie_string) {
+
+  } 
 
 
 
