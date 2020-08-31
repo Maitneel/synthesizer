@@ -164,7 +164,6 @@
     set: function () {
       this.byte_per_s = (this.channel * this.sampling_fre * (this.bit_rate / 8));
       this.block_size = (this.channel * (this.bit_rate / 8));
-      // console.log(this.block_size);
     }
   };
   wav_header.set();
@@ -356,29 +355,6 @@
     return create_file(header_bin, wave);
   }
 
-  /*
-  // とりあえずあとでやろうと思ってコメントアウトしたけど結局できなかった...
-  // 矩形波，のこぎり波をフーリエ級数で計算したかったが(倍音が多すぎることになるので)，なぜかうまくいかないのでとりあえず1回放置する
-  let sawtooth = [];
-  function clac_sawtooth(sampling_fre, max_x) {
-    // ここでの sampling_fre は他の sampling_fre とは全くもって違うものである
-    //   →他のところにおけるものはwavファイルのサンプリング周波数であるのに対し，これはのこぎり波の波形の計算をする時にどの程度でサンプリングするかの周波数である
-    sawtooth[0] = [];
-    for (let i = 0; i < sampling_fre; i++) {
-      sawtooth[0][i] = -Math.sin(2 * Math.PI * i / sampling_fre) - Math.sin(2 * Math.PI * i * 2 / sampling_fre) / 2;
-      // console.log(-Math.sin(2 * Math.PI * i / sampling_fre) - Math.sin(2 * Math.PI * i * 2 / sampling_fre) / 2);
-    }
-    // console.log('hoge');
-    for (let i = 1; i < max_x; i++) {
-      sawtooth[i] = [];
-      for (let j = 0; j < sampling_fre; j++) {
-        sawtooth[i][j] = sawtooth[i - 1][j] + (sawtooth[i - 1][(j * 2) % sampling_fre]) / 2;
-        // console.log(sawtooth[i - 1][j] + ' ' + sawtooth[i - 1][((j * 2) % sampling_fre)] + ' ' + (j * 2) % sampling_fre);
-      }
-    }
-  }
-  */
-
   // のこぎり波を作成する関数
   function create_sawtooth_wave(wav_header, frequency, length) {
     // bit_rateが16以外の場合は考えないものとする
@@ -400,11 +376,6 @@
     return create_file(header_bin, wave);
   }
 
-
-  // なぜか使っていないのに定義されてる周波数たち
-  let v0_A4_frequency = input_v0_A4_frequency.value;
-  let v1_A4_frequency = input_v1_A4_frequency.value;
-  let v2_A4_frequency = input_v2_A4_frequency.value;
 
   // A4 というのは，音の高さのことで，中央のC音(Do)の上のA音(La)のことである
   // このプログラムでは，htmlを表示した時，1番下にあるA音がA4である。
@@ -452,31 +423,18 @@
 
   // create audio tags
   let audio = [];
-  let audio_length = [];
   let wav_files_blob = [];
   function create_audio (voice) {
     audio[voice] = [];
-    // audio_length[voice] []
     wav_files_blob[voice] = [];
     for (let i = 0; i < key_list.length; i++) {
       wav_files_blob[voice][i] = new Blob([wav_files[voice][i]], {type: 'audio/wav'});
       audio[voice][i] = document.createElement('audio');
       audio[voice][i].src = URL.createObjectURL(wav_files_blob[voice][i]);
-      // audio_length[voice][i] = tweak_length()
-
-      // audio[voice][i].addEventListener('ended', (event) => {
-      //   let stop = new Date().getTime();
-      //   audio[voice][i].currentTime = 0;
-      //   audio[voice][i].play()
-      //   console.log(new Date().getTime() - stop);
-      // });
-
-      
 
       audio[voice][i].loop = true;
       audio[voice][i].volume = input_volume[voice].value;
       audio_tags_area[voice].appendChild(audio[voice][i]);
-      console.log(i);
     }
   };
 
@@ -488,7 +446,6 @@
 
   // A4 の周波数が変更された時に audio タグを変更する為に呼び出される関数
   function update_audio(selected_wave_type, A4_frequency, voice) {
-    console.log(selected_wave_type);
     create_frequency_list(A4_frequency, voice);
     if (selected_wave_type === 'sin') {
       set_sin_wave(voice);
@@ -505,39 +462,11 @@
 
   let selected_wave_type = [];
 
-  // 初期化
-  (function () {
-    // 開発当初の名残
-    /*
-    create_frequency_list(v0_A4_frequency, 0);
-    set_sin_wave(0);
-    create_audio(0);
-    create_frequency_list(v1_A4_frequency, 1);
-    set_sin_wave(1);
-    create_audio(1);
-
-    create_frequency_list(v2_A4_frequency, 2);
-    set_sin_wave(2);
-    create_audio(2);
-    // */
-  })();
-
-  console.log(wav_files[0]);
-
-  // chrome audio.loop がうまくいかない問題を解決使用とした関数。うまくいかなかったので使ってない
-  function reload(n) {
-    console.log('reload flag' + is_keydowning);
-    if (is_mousedowning == true) {
-      audio_play(n);
-    }
-  }
   let interval_id = undefined;
   let is_mousedowning = false;
   // キーを押した時，音を鳴らす処理
   function audio_play(n) {
-    console.log('audio_play');
     is_mousedowning = true;
-    console.log('onmousedown, pushed by ' + n);
     let start = new Date().getTime();
     for (let i = 0; i < audio.length; i++) {
       
@@ -556,13 +485,6 @@
         organ_audio[n][i].play();
       }
     }
-    console.log('flag iskey ' + is_keydowning)
-    if (is_keydowning != true) {
-      if (interval_id == undefined) {
-        // interval_id = setInterval(reload(n), length * 0.9 * 1000);
-      }
-    }
-    console.log('time: ' +( start - new Date().getTime()));
     if (((n % 12) < 5 && (n % 12) % 2 == 0) || ((5 <= (n % 12)) && (n % 12) % 2 == 1)) {
       key_list[n].classList.remove('not_pressed_whitekey');
       key_list[n].classList.add('pressed_whitekey');
@@ -572,8 +494,6 @@
     }
 
     key_list[n].classList.add('on_press_whitekey');
-    console.log(audio[n].src);
-    // TODO
   }
 
   // キーを離した時，音を止める処理
@@ -581,7 +501,6 @@
     is_mousedowning = false;
     clearInterval(interval_id);
     interval_id = undefined;
-    console.log('mouseout or onmouseup. by ' + n);
     for (let i = 0; i < audio.length; i++) {
       if (voice_power_on[i] == true) {
         audio[i][n].pause();
@@ -589,13 +508,11 @@
       }
     }
     if (organ_power_on == true) {
-      console.log('n = ' + n + ' organ_audio.length = ' + organ_audio.length)
       for (let i = 0; i < organ_audio[n].length; i++) {
         organ_audio[n][i].pause();
         organ_audio[n][i].currentTime = 0;
       }
     }
-    console.log(n + ' ' + (n % 12) + ' ' + (((n % 12) < 5 && (n % 12) % 2 == 0) || ((5 <= (n % 12)) && (n % 12) % 2 == 1)))
     if (((n % 12) < 5 && (n % 12) % 2 == 0) || ((5 <= (n % 12)) && (n % 12) % 2 == 1)) {
       key_list[n].classList.remove('pressed_whitekey');
       key_list[n].classList.add('not_pressed_whitekey');
@@ -603,8 +520,6 @@
       key_list[n].classList.remove('pressed_blackkey');
       key_list[n].classList.add('not_pressed_blackkey');
     }
-    // key_list[n].className -= 'on_press_whitekey';
-    // TODO
   }
 
   // ---------------------------
@@ -642,14 +557,12 @@
     drawbar_volume[bar_index] = balance / 8;
     for (let i = 0; i < organ_audio.length; i++) {
       organ_audio[i][bar_index].volume = input_organ_volume.value * drawbar_volume[bar_index];
-      console.log('[' + i + '][' + bar_index + '].volume = ' + input_organ_volume.value * drawbar_volume[bar_index])
     }
   }
 
   // ドローバーのhtmlを作るのに使う
   let drawbar = [];
   let drawbar_overtone = [];
-  let drawbar_overtone_class = [];
   let drawbar_overtone_feet = ['16\'', '5 1/3\'', '8\'', '4\'', '2 2/3\'', '2\'', '1 3/5\'', '1 1/3\'', '1\''];
   let drawbar_position = [];
   let drawbar_position_status = []; // on の場合 true, off の場合 false
@@ -739,10 +652,7 @@
     for (let i = 0; i < 9; i++) {
       organ_frequency_list[i][2] = organ_frequency_list[i + 12][2] / 2;
     }
-    console.log('overtone_frequency.length ' + organ_frequency_list.length)
-    console.log(organ_overtone_ratio.length);
     for (let i = 0; i < organ_frequency_list.length; i++) {
-      console.log('i = ' + i);
       for (let j = 0; j < organ_overtone_ratio.length; j++) {
         organ_frequency_list[i][j] = organ_frequency_list[i][2] * organ_overtone_ratio[j];
       }
@@ -789,7 +699,6 @@
       organ_audio[i] = [];
       organ_wav_files_blob[i] = [];
       for (let j = 0; j < organ_frequency_list[i].length; j++) {
-        console.log(organ_wav_files[i][j]);
         organ_wav_files_blob[i][j] = new Blob([organ_wav_files[i][j]], {type: 'audio/wav'});
         organ_audio[i][j] = document.createElement('audio');
         organ_audio[i][j].src = URL.createObjectURL(organ_wav_files_blob[i][j]);
@@ -812,12 +721,10 @@
       set_organ_sawtooth_wave();
     } else {
       console.error('?');
-      console.log(selected_organ_wave_type);
     }
     for (let i = 0; i < drawbar_audio_tags.length; i++) {
       remove_all_children(drawbar_audio_tags[i]);
     }
-    console.log(organ_wav_files);
     create_organ_audio();
   }
   
@@ -879,7 +786,6 @@
   // memory_data から設定を書き換える(この時点で設定は変わらない)
   function change_config(memory_data) {
     inputs_A4_frequency[0].value = memory_data.voice0.A4_frequency;
-    console.log('foo flag' + inputs_A4_frequency[0].value + ' ' + memory_data.voice0.A4_frequency);
     selected_wave_type[0] = memory_data.voice0.wave_type;
     input_volume[0].value = memory_data.voice0.volume;
     inputs_A4_frequency[1].value = memory_data.voice1.A4_frequency;
@@ -930,7 +836,6 @@
       change_memory_number = i;
       set_memory_data();
       change_config(memory_data[i + 1]);
-      console.log(memory_data[0])
     }
   }
 
@@ -939,7 +844,6 @@
   cancel.onclick = () => {
     is_config_changed = false;
     change_memory_number = -1
-    console.log('hogehoge');
     change_config(memory_data[0]);
   }
 
@@ -982,38 +886,7 @@
       is_config_changed ^= 1;
       onclick_in_memory_section = false
     }
-    console.log('click document')
   }
-
-  // TODO cookie にメモリを保存しようと思ってつくった関数。そのうちcookieに保存できるようにして再読み込み，ブラウザを閉じても復元できるようにする
-  function create_memory_cookie(memory_data, memory_number) {
-    let result = 'memory' + memory_number + '=';
-
-    result += memory_data.voice0.A4_frequency + '_';
-    result += memory_data.voice0.wave_type + '_';
-    result += memory_data.voice0.volume + '_';
-    result += memory_data.voice1.A4_frequency + '_';
-    result += memory_data.voice1.wave_type + '_';
-    result += memory_data.voice1.volume + '_';
-    result += memory_data.voice2.A4_frequency + '_';
-    result += memory_data.voice2.wave_type + '_';
-    result += memory_data.voice2.volume + '_';
-    result += memory_data.organ.A4_frequency + '_';
-    result += memory_data.organ.wave_type + '_';
-    result += memory_data.organ.volume + '_';
-    for (let i = 0; i < memory_data.drawbar.length; i++) {
-      result += memory_data.drawbar[i] + '_';
-    }
-
-    return result;
-  }
-
-  // cookie を読んでメモリーに保存する関数
-  function read_memory_cookie(cookie_string) {
-    // TODO
-  } 
-
-
 
 
 
@@ -1036,7 +909,6 @@
       A4_frequency[i] = inputs_A4_frequency[i].value;
       if (voice_power_on[i] == true) {
         update_audio(selected_wave_type[i], A4_frequency[i], i);
-        console.log(audio[0].src);
       } else {
         voice_changed[i] = true;
       }
@@ -1045,7 +917,6 @@
 
   for (let i = 0; i < inputs_A4_frequency.length; i++) {
     inputs_A4_frequency[i].onclick = () => {
-      console.log('input a4 click');
       voice_power_on[i] ^= 1;
     }
   }
@@ -1202,7 +1073,6 @@
   let key_setting_span = document.createElement('span');
   let key_setting_span_innerText = ['ここをクリックするとキーの割り当てを開始します', 'ここをクリックするとキーの割り当てを終了します\nキーを割り振りたい音を選択して割り振りたいキーを押すと登録できます。\nesc, backspaceは割り振れません\nescで終了\n削除したい音を選択してbackspaceを\n押すと割り当てを削除'];
   key_setting_span.innerText = key_setting_span_innerText[0];
-  // key_setting_span.style.fontSize = '15px';
   div_key_setting.appendChild(key_setting_span);
   div_key_setting.onclick = () => {
     key_number = -1;
@@ -1212,7 +1082,6 @@
     } else {
       key_setting_span.innerText = key_setting_span_innerText[0];
     }
-    console.log(key_list_of_play_audio);
   }
 
   let is_keydowning = false;
@@ -1252,8 +1121,5 @@
       key_list[key_list_of_play_audio[event.keyCode]].onmouseup();
     }
   }
-
-  console.log(labels);
-  console.log(v0_label);
 
 })();
